@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Clean Energy — Investment Briefing for Singapore Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FAF8F3;--cream2:#F2EFE7;--cream3:#E8E4DA;
+  --ink:#1A1A1A;--ink2:#2C2C2C;--ink-light:#555;--ink-lighter:#888;
+  --saffron:#D96B15;--green-flag:#0D7C3D;
+  --gold:#A67C1A;--gold-light:#C99B2E;--gold-bg:rgba(166,124,26,0.06);
+  --navy:#0C2340;--navy-light:#1A3A5C;
+  --red-accent:#B83A2A;
+  --font-h:'Playfair Display',Georgia,serif;
+  --font-b:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--cream);color:var(--ink);font-family:var(--font-b);line-height:1.7;overflow-x:hidden}
+
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--saffron),#FAFAFA,var(--green-flag));z-index:10000;width:0;transition:width 0.15s}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 48px;display:flex;align-items:center;transition:all 0.4s;background:transparent}
+nav.scrolled{background:rgba(250,248,243,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.05);box-shadow:0 1px 16px rgba(0,0,0,0.03)}
+.nav-flag{width:28px;height:4px;display:flex;border-radius:2px;overflow:hidden}
+.nav-flag span:nth-child(1){flex:1;background:var(--saffron)}
+.nav-flag span:nth-child(2){flex:1;background:#EEE}
+.nav-flag span:nth-child(3){flex:1;background:var(--green-flag)}
+.nav-title{font-family:var(--font-h);font-size:15px;font-weight:600;color:var(--cream);letter-spacing:1px;margin-left:12px}
+.nav-right{margin-left:auto;font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.5);text-transform:uppercase}
+nav.scrolled .nav-title{color:var(--ink)}
+nav.scrolled .nav-right{color:var(--ink-lighter)}
+
+section{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;padding:100px 80px}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.rd1{transition-delay:0.1s}.rd2{transition-delay:0.2s}.rd3{transition-delay:0.3s}.rd4{transition-delay:0.4s}.rd5{transition-delay:0.5s}
+
+/* ===== HERO ===== */
+#hero{background:var(--navy);color:var(--cream);min-height:100vh;padding:0 80px;overflow:hidden}
+#hero::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--saffron) 33.3%,#FFFFFF 33.3%,#FFFFFF 66.6%,var(--green-flag) 66.6%)}
+.hero-glow{position:absolute;bottom:-300px;right:-150px;width:700px;height:700px;background:radial-gradient(circle,rgba(166,124,26,0.07) 0%,transparent 60%);pointer-events:none}
+.hero-to{display:inline-block;font-size:13px;letter-spacing:3px;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:8px;border:1px solid rgba(255,255,255,0.1);padding:5px 14px;border-radius:16px;opacity:0;animation:fadeUp 0.8s 0.3s forwards}
+h1{font-family:var(--font-h);font-size:clamp(34px,4.5vw,52px);font-weight:700;line-height:1.15;color:var(--cream);opacity:0;animation:fadeUp 0.8s 0.5s forwards}
+h1 em{color:var(--gold-light);font-style:italic}
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.55);margin-top:20px;max-width:620px;line-height:1.7;opacity:0;animation:fadeUp 0.8s 0.7s forwards}
+.hero-from{position:absolute;bottom:48px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end;opacity:0;animation:fadeUp 0.8s 1.1s forwards}
+.hero-from-left{font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase}
+.hero-from-right{text-align:right}
+.hero-from-right p{font-size:13px;color:rgba(255,255,255,0.4)}
+.hero-from-right strong{color:var(--gold-light);font-weight:500}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== TYPOGRAPHY ===== */
+h2{font-family:var(--font-h);color:var(--ink);font-weight:700;font-size:clamp(26px,3.5vw,40px);line-height:1.15}
+h3{font-family:var(--font-h);color:var(--ink);font-weight:600;font-size:19px}
+.section-label{font-size:12px;letter-spacing:5px;color:var(--ink-lighter);text-transform:uppercase;margin-bottom:8px}
+.gold-rule{width:48px;height:2px;background:var(--gold);margin:14px 0 22px}
+
+/* ===== DARK SECTIONS ===== */
+.dark{background:var(--navy);color:var(--cream);padding:100px 80px}
+.dark h2{color:var(--cream)}
+.dark h3{color:var(--cream)}
+.dark .section-label{color:rgba(255,255,255,0.35)}
+.dark .gold-rule{background:var(--gold-light)}
+
+/* ===== PROBLEM SECTION ===== */
+.problem-visual{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px}
+.problem-left{display:flex;flex-direction:column;gap:20px}
+.problem-stat{display:flex;align-items:baseline;gap:14px}
+.problem-num{font-family:var(--font-h);font-size:50px;font-weight:700;color:var(--red-accent);line-height:1}
+.problem-label{font-size:16px;color:var(--ink-light);max-width:280px}
+.problem-right{background:var(--cream2);border-left:3px solid var(--red-accent);padding:28px;border-radius:0 4px 4px 0}
+.problem-right h3{font-size:20px;margin-bottom:12px;color:var(--red-accent)}
+.problem-right p{font-size:16px;color:var(--ink-light);line-height:1.7}
+.problem-quote{font-family:var(--font-h);font-size:18px;color:var(--ink);font-style:italic;margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.06)}
+
+/* ===== SOLUTION SECTION ===== */
+.solution-hero{background:var(--gold-bg);border:1px solid rgba(166,124,26,0.12);padding:32px;border-radius:4px;margin-top:24px}
+.solution-hero h3{font-size:22px;color:var(--gold);margin-bottom:8px}
+.solution-hero p{font-size:17px;color:var(--ink-light);line-height:1.7}
+
+.solution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.sol-card{background:white;border:1px solid rgba(0,0,0,0.05);padding:24px;border-radius:4px;transition:all 0.3s;position:relative;overflow:hidden}
+.sol-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+.sol-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sol-card:nth-child(1)::before{background:var(--saffron)}
+.sol-card:nth-child(2)::before{background:var(--gold)}
+.sol-card:nth-child(3)::before{background:var(--green-flag)}
+.sol-label{font-size:12px;letter-spacing:3px;color:var(--ink-lighter);text-transform:uppercase;margin-bottom:10px}
+.sol-card h3{font-size:18px;margin-bottom:8px}
+.sol-card p{font-size:14px;color:var(--ink-light);line-height:1.6}
+
+.complexity-bar{margin-top:28px;background:var(--cream2);border:1px solid rgba(0,0,0,0.04);padding:24px;border-radius:4px}
+.complexity-bar h3{font-size:17px;margin-bottom:10px;color:var(--navy)}
+.complexity-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.c-tag{font-size:13px;padding:5px 14px;border-radius:16px;background:white;border:1px solid rgba(0,0,0,0.06);color:var(--ink-light)}
+
+/* ===== STATS ROW ===== */
+.stats-row{display:flex;gap:48px;margin-top:28px}
+.stat-num{font-family:var(--font-h);font-size:clamp(32px,3.5vw,48px);font-weight:700;color:var(--navy);line-height:1.1}
+.stat-label{font-size:14px;color:var(--ink-light);margin-top:6px;max-width:180px}
+
+/* ===== REASON GRID ===== */
+.reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.reason-card{background:var(--cream2);border:1px solid rgba(0,0,0,0.03);padding:22px;border-radius:4px;transition:all 0.3s}
+.reason-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.05)}
+.reason-num{font-family:var(--font-h);font-size:26px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.reason-card h3{margin-bottom:4px;font-size:17px}
+.reason-card p{font-size:14px;color:var(--ink-light);line-height:1.6}
+
+/* ===== BENEFIT LIST (dark) ===== */
+.benefit-list{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.benefit-item{display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:rgba(255,255,255,0.03);border-left:3px solid var(--gold-light);border-radius:0 4px 4px 0;transition:all 0.3s}
+.benefit-item:hover{background:rgba(255,255,255,0.06);transform:translateX(4px)}
+.benefit-item h3{font-size:17px;color:var(--cream);margin-bottom:4px}
+.benefit-item p{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6}
+
+/* ===== AUDIENCE GRID ===== */
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.aud-card{background:var(--cream2);border:1px solid rgba(0,0,0,0.04);padding:22px;border-radius:4px;transition:all 0.3s}
+.aud-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.05)}
+.aud-diamond{width:10px;height:10px;background:var(--gold);transform:rotate(45deg);margin-bottom:12px}
+.aud-card h3{font-size:17px;margin-bottom:6px}
+.aud-card p{font-size:13px;color:var(--ink-light);line-height:1.6}
+.aud-tag{display:inline-block;font-size:11px;letter-spacing:1px;padding:3px 10px;border-radius:12px;margin-top:10px;text-transform:uppercase;font-weight:500}
+
+/* ===== CTA ===== */
+.cta{background:var(--navy);color:var(--cream);text-align:center;padding:100px 80px}
+.cta h2{color:var(--cream)}
+.cta .section-label{color:rgba(255,255,255,0.35);text-align:center}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.step-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);padding:22px;border-radius:4px;text-align:center}
+.step-num{font-family:var(--font-h);font-size:26px;font-weight:700;color:var(--gold-light);margin-bottom:6px}
+.step-box h3{font-size:16px;color:var(--cream);margin-bottom:4px}
+.step-box p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6}
+
+.callout{font-family:var(--font-h);font-size:16px;color:var(--gold);font-style:italic;text-align:center;margin-top:24px}
+.footnote{font-size:11px;color:var(--ink-lighter);margin-top:10px}
+
+@media(max-width:900px){
+  section,.dark,.cta{padding:80px 32px}
+  #hero{padding:0 32px}
+  .problem-visual,.reason-grid,.solution-grid,.audience-grid,.steps-row{grid-template-columns:1fr}
+  .stats-row{flex-direction:column;gap:20px}
+  .audience-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<nav id="navbar">
+  <div class="nav-flag"><span></span><span></span><span></span></div>
+  <div class="nav-title">India Clean Energy</div>
+  <div class="nav-right">Confidential Briefing</div>
+</nav>
+
+<!-- ==================== 1. COVER ==================== -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-to">Submitted by Alendei Green RE Pvt. Ltd., Gujarat, India</div>
+  <h1>India's Clean Energy Opportunity<br>for <em>Singapore Capital</em></h1>
+  <div class="hero-sub">A request for the High Commission's support in connecting credible Indian renewable energy infrastructure with Singapore-based family offices, multi-family offices, and institutional investors.</div>
+  <div class="hero-from">
+    <div class="hero-from-left">Confidential · April 2026</div>
+    <div class="hero-from-right">
+      <p>Submitted by</p>
+      <p><strong>Alendei Green RE Pvt. Ltd.</strong></p>
+      <p>Gujarat, India</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. THE PROBLEM ==================== -->
+<section>
+  <div class="section-label reveal">The problem</div>
+  <h2 class="reveal rd1">Industries Know They Need Clean Energy.<br>Most Still Don't Adopt It.</h2>
+  <div class="gold-rule reveal rd2"></div>
+  <div class="problem-visual reveal rd3">
+    <div class="problem-left">
+      <div class="problem-stat">
+        <div class="problem-num">70%</div>
+        <div class="problem-label">of Indian industries acknowledge the need for sustainable energy</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-num" style="color:var(--navy)">&lt;15%</div>
+        <div class="problem-label">have actually adopted on-site or captive renewable energy</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-num" style="color:var(--gold)">$0</div>
+        <div class="problem-label">is what most industries want to spend on energy infrastructure capex</div>
+      </div>
+    </div>
+    <div class="problem-right">
+      <h3>The Core Tension</h3>
+      <p>A textile manufacturer, a chemical plant, a steel mill — they all know clean energy is the future. But when the board meets, the choice is always the same:</p>
+      <p style="margin-top:10px"><strong>Deploy ₹50 Crore into expanding production capacity? Or into solar panels?</strong></p>
+      <p style="margin-top:10px">Every business will prioritise core operations over sustainability capex. Not because they don't care — because capital is finite and production comes first.</p>
+      <div class="problem-quote">"The gap isn't awareness. The gap is capital allocation. Industries don't need more reasons to go green — they need someone to remove the capex barrier entirely."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. THE ALENDEI SOLUTION ==================== -->
+<section style="background:var(--cream2)">
+  <div class="section-label reveal">The solution</div>
+  <h2 class="reveal rd1">We Invest. We Build. We Operate.<br>Industry Gets Clean Energy at a Discount.</h2>
+  <div class="gold-rule reveal rd2"></div>
+
+  <div class="solution-hero reveal rd2">
+    <h3>Zero Capex for the Industry. Discounted Power from Day 1.</h3>
+    <p>Alendei Green RE invests its own capital (alongside investor equity and project debt), builds the solar plant at or near the industrial site, handles all engineering complexity, and sells clean energy to the industry at a rate <strong>lower than what they pay the grid today</strong>. The industry saves money. The investor earns contracted returns. Alendei operates the asset for 25 years.</p>
+  </div>
+
+  <div class="solution-grid reveal rd3">
+    <div class="sol-card">
+      <div class="sol-label">For the industry</div>
+      <h3>Zero Capex. Lower Bills.</h3>
+      <p>No upfront investment required. Clean energy delivered at a discounted tariff compared to grid rates. Sustainability goals met without diverting capital from core business.</p>
+    </div>
+    <div class="sol-card">
+      <div class="sol-label">For the investor</div>
+      <h3>Asset-Backed Returns.</h3>
+      <p>Equity into a project SPV backed by physical infrastructure. Revenue from 25-year power purchase agreements with creditworthy industrial consumers. 14–15% IRR.</p>
+    </div>
+    <div class="sol-card">
+      <div class="sol-label">For Alendei</div>
+      <h3>Operate. Scale. Repeat.</h3>
+      <p>End-to-end EPC and O&M capability. Promoter equity committed alongside investor. Skin in the game. Every project is InvIT-ready from Day 1.</p>
+    </div>
+  </div>
+
+  <div class="complexity-bar reveal rd4">
+    <h3>We Don't Build Simple Rooftop Projects.</h3>
+    <p style="font-size:15px;color:var(--ink-light);margin-top:4px">Industrial environments are complex. Corrosive gases in chemical plants accelerate structural rusting. Coastal salt exposure degrades standard mounts. High-temperature zones require specialised panel selection. Alendei's EPC team designs for these conditions — selecting materials, structures, and layouts that deliver 25-year performance in environments where generic contractors fail in 3.</p>
+    <div class="complexity-tags">
+      <span class="c-tag">Corrosive gas environments</span>
+      <span class="c-tag">Coastal salt exposure</span>
+      <span class="c-tag">High-temperature zones</span>
+      <span class="c-tag">Dust-heavy industrial sites</span>
+      <span class="c-tag">Limited rooftop load capacity</span>
+      <span class="c-tag">Ground-mount on industrial land</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. WHY INDIA ==================== -->
+<section>
+  <div class="section-label reveal">The market</div>
+  <h2 class="reveal rd1">Why India. Why Now.</h2>
+  <div class="gold-rule reveal rd2"></div>
+  <p style="font-size:16px;color:var(--ink-light);max-width:680px" class="reveal rd2">India is simultaneously the world's fastest-growing major economy and its most ambitious clean energy market. The Government has committed to 500 GW of renewable capacity by 2030 — one of the largest infrastructure investment opportunities of this decade.</p>
+  <div class="stats-row reveal rd3">
+    <div class="stat"><div class="stat-num" data-target="500" data-suffix=" GW">0</div><div class="stat-label">Govt. renewable target by 2030</div></div>
+    <div class="stat"><div class="stat-num" data-target="100" data-suffix="%">0</div><div class="stat-label">FDI on automatic route</div></div>
+    <div class="stat"><div class="stat-num" data-target="25" data-suffix=" yr">0</div><div class="stat-label">Sovereign-backed PPAs</div></div>
+  </div>
+  <div class="reason-grid reveal rd4">
+    <div class="reason-card"><div class="reason-num">01</div><h3>PM KUSUM Programme</h3><p>30.8 GW decentralised solar target with central government subsidy across India's agricultural and industrial belt.</p></div>
+    <div class="reason-card"><div class="reason-num">02</div><h3>Open Access Reforms</h3><p>Direct consumer-to-generator solar contracts with minimal wheeling charges — bypassing distribution utilities entirely.</p></div>
+    <div class="reason-card"><div class="reason-num">03</div><h3>PLI Scheme</h3><p>₹24,000 Crore production-linked incentive for domestic solar manufacturing — strengthening the local supply chain.</p></div>
+    <div class="reason-card"><div class="reason-num">04</div><h3>Green Hydrogen Mission</h3><p>₹19,744 Crore national allocation creating massive downstream demand for renewable energy capacity.</p></div>
+  </div>
+</section>
+
+<!-- ==================== 5. WHY SINGAPORE CAPITAL ==================== -->
+<section class="dark">
+  <div class="section-label reveal">The Singapore advantage</div>
+  <h2 class="reveal rd1">Why Singapore Capital Belongs in Indian Renewables</h2>
+  <div class="gold-rule reveal rd2"></div>
+  <div class="benefit-list reveal rd3">
+    <div class="benefit-item"><div><h3>Double-Digit Effective USD Yields</h3><p>Indian solar delivers ~14–15% IRR in INR terms. Even after 3–4% annual currency depreciation, effective USD returns of 10–11% significantly outperform most global infrastructure alternatives.</p></div></div>
+    <div class="benefit-item"><div><h3>India-Singapore DTAA Benefits</h3><p>The Double Taxation Avoidance Agreement ensures tax-efficient structuring. Capital gains and dividend taxation are optimised under the bilateral treaty framework.</p></div></div>
+    <div class="benefit-item"><div><h3>Full Repatriation Under FEMA</h3><p>Dividends and capital gains from Indian solar SPVs are fully repatriable via RBI's automatic route. No special approvals, no lock-in period. Well-established regulatory pathway.</p></div></div>
+    <div class="benefit-item"><div><h3>Aligned with MAS Green Finance Framework</h3><p>Singapore's Green Finance Action Plan and MAS sustainability taxonomy actively encourage green infrastructure investments. Indian solar aligns perfectly with ESG mandates and impact reporting.</p></div></div>
+    <div class="benefit-item"><div><h3>Asset-Backed, Sovereign Counter-Party</h3><p>Investments secured against physical infrastructure. Power purchase agreements with creditworthy industrial consumers or state government entities. Sovereign credit risk near-zero.</p></div></div>
+  </div>
+</section>
+
+<!-- ==================== 6. WHO SHOULD INVEST ==================== -->
+<section>
+  <div class="section-label reveal">Target investor profile</div>
+  <h2 class="reveal rd1">Who This Opportunity Is For</h2>
+  <div class="gold-rule reveal rd2"></div>
+  <p style="font-size:15px;color:var(--ink-light);max-width:660px" class="reveal rd2">We seek introductions to the following categories of Singapore-based capital providers with appetite for India-linked infrastructure assets.</p>
+  <div class="audience-grid reveal rd3">
+    <div class="aud-card"><div class="aud-diamond"></div><h3>Single Family Offices</h3><p>UHNW families with India heritage or Asia-Pacific infrastructure allocation. Typical ticket: $0.5M–$2M. Direct equity into project SPV — clean, transparent, no fund layer.</p><span class="aud-tag" style="background:var(--gold-bg);color:var(--gold)">Primary target</span></div>
+    <div class="aud-card"><div class="aud-diamond"></div><h3>Multi-Family Offices</h3><p>Platforms managing pooled capital across multiple families. Can deploy $2M–$5M into PPA-scale projects. Structured via SPV with board and information rights.</p><span class="aud-tag" style="background:var(--gold-bg);color:var(--gold)">High priority</span></div>
+    <div class="aud-card"><div class="aud-diamond"></div><h3>Early-Stage / Infra VCs</h3><p>Funds with India allocation or clean energy thesis. Interested in the platform play — not one project but the operating engine across multiple SPVs.</p><span class="aud-tag" style="background:rgba(12,35,64,0.06);color:var(--navy)">Strategic</span></div>
+  </div>
+  <div class="audience-grid reveal rd4" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="aud-card"><div class="aud-diamond"></div><h3>Impact & ESG Funds</h3><p>Funds with green infrastructure mandates seeking measurable carbon offset and UN SDG alignment. Indian solar offers verifiable impact at scale.</p><span class="aud-tag" style="background:rgba(13,124,61,0.06);color:var(--green-flag)">ESG aligned</span></div>
+    <div class="aud-card"><div class="aud-diamond"></div><h3>NRI / PIO Networks</h3><p>Singapore-based Indian diaspora with emotional and financial ties to India. Direct equity route under FEMA is familiar and well-trodden for this community.</p><span class="aud-tag" style="background:rgba(217,107,21,0.06);color:var(--saffron)">Quick conversion</span></div>
+  </div>
+</section>
+
+<!-- ==================== 7. NEXT STEPS ==================== -->
+<section class="cta">
+  <div class="section-label reveal">Next steps</div>
+  <h2 class="reveal rd1">Request for Introductions</h2>
+  <div style="width:48px;height:2px;background:var(--gold-light);margin:14px auto 20px" class="reveal rd2"></div>
+  <p class="reveal rd3" style="font-size:16px;color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;line-height:1.7">We respectfully request the High Commission's support in connecting Alendei Green RE with Singapore-based investors who share our conviction in India's clean energy future.</p>
+
+  <div class="steps-row reveal rd4">
+    <div class="step-box"><div class="step-num">01</div><h3>Introduction</h3><p>High Commission connects Alendei with interested capital providers from Singapore</p></div>
+    <div class="step-box"><div class="step-num">02</div><h3>NDA & Data Room</h3><p>Project-specific financials, land documents, PPA details shared under mutual NDA</p></div>
+    <div class="step-box"><div class="step-num">03</div><h3>Term Sheet</h3><p>Equity quantum, SPV shareholding, board rights, and exit provisions formalised</p></div>
+  </div>
+
+  <div style="margin-top:48px" class="reveal rd5">
+    <p style="font-size:13px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">About the Operating Partner</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:left">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:20px;border-radius:4px">
+        <p style="font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:8px">Company</p>
+        <p style="font-size:17px;color:var(--gold-light);font-weight:600;font-family:var(--font-h)">Alendei Green RE Pvt. Ltd.</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-top:4px">Vadodara, Gujarat, India</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:20px;border-radius:4px">
+        <p style="font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:8px">Track Record</p>
+        <p style="font-size:17px;color:var(--cream);font-weight:600">~25 MW Deployed</p>
+        <p style="font-size:15px;color:var(--gold-light);font-weight:600;margin-top:10px">8-Figure Revenue</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-top:2px">In under 12 months of operations</p>
+        <p style="font-size:15px;color:var(--gold-light);font-weight:600;margin-top:10px">Profitable from Year 1</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-top:2px">No burn phase — cash-positive from Day 1</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:20px;border-radius:4px">
+        <p style="font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:8px">Ecosystem</p>
+        <p style="font-size:17px;color:var(--cream);font-weight:600">1,600+ Enterprise Clients</p>
+        <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-top:4px">Including NSE, MCX, and Tata</p>
+      </div>
+    </div>
+    <p style="font-size:15px;color:rgba(255,255,255,0.5);margin-top:16px;line-height:1.7;text-align:left">End-to-end EPC and O&amp;M capability across complex industrial environments. Part of the broader Alendei ecosystem. Every project is structured InvIT-ready from Day 1.</p>
+  </div>
+
+<div style="margin-top:48px;display:flex;justify-content:space-between;width:100%" class="reveal rd5">
+    <span style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase">From Bharat, For the Future</span>
+    <span style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase">Confidential — For Intended Recipients Only</span>
+  </div>
+</section>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(window.scrollY/h*100)+'%';
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');obs.unobserve(el.target)}})},{threshold:0.12,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const cObs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){const t=parseInt(el.target.dataset.target),p=el.target.dataset.prefix||'',s=el.target.dataset.suffix||'';let c=0;const step=Math.max(1,Math.floor(t/35));const timer=setInterval(()=>{c+=step;if(c>=t){c=t;clearInterval(timer)}el.target.textContent=p+c.toLocaleString()+s},30);cObs.unobserve(el.target)}})},{threshold:0.5});
+document.querySelectorAll('.stat-num[data-target]').forEach(el=>cObs.observe(el));
+</script>
+</body>
+</html>
