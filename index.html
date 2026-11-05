@@ -1,1306 +1,597 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>August Delivery Cup — Scorecard &amp; Ops Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  if (window.tailwind) {
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          ink: '#0E1424',
-          surface: '#171F33',
-          surface2: '#202A45',
-          gold: '#D6A94A',
-          goldBright: '#F0C674',
-          mint: '#3ECF8E',
-          coral: '#F2637A',
-          slateTxt: '#8A93AC',
-        },
-        fontFamily: {
-          display: ['Oswald', 'sans-serif'],
-          body: ['Inter', 'sans-serif'],
-          mono: ['"JetBrains Mono"', 'monospace'],
-        }
-      }
-    }
-  }
-  }
-</script>
-<script src="https://unpkg.com/lucide@latest"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cost Sheet: Group Captive Solar + BESS for Balkrishna Industries, Waluj | Alendei Green RE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  html { scroll-behavior: smooth; }
-  body { font-feature-settings: "tnum"; }
-  .tab-btn { display:flex; align-items:center; gap:.5rem; padding:.75rem 1rem; font-size:.813rem; font-weight:500; color:#8A93AC; border-bottom:2px solid transparent; white-space:nowrap; transition:.15s; cursor:pointer; background:none; }
-  .tab-btn:hover { color:#EDEFF5; }
-  .tab-btn-active { color:#F0C674 !important; border-bottom-color:#D6A94A !important; }
-  .thermo-track { position:relative; height:10px; border-radius:999px; background:#171F33; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
-  .thermo-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#D6A94A,#F0C674); transition:width .7s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
-  .thermo-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.4) 50%, transparent 70%); background-size:200% 100%; animation: shimmer 2.6s linear infinite; }
-  @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
-  .medallion { width:2.25rem; height:2.25rem; min-width:2.25rem; border-radius:999px; display:flex; align-items:center; justify-content:center; }
-  .modal-overlay { position:fixed; inset:0; background:rgba(6,9,18,.72); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:50; padding:1rem; }
-  .modal-overlay.hidden { display:none; }
-  .modal-card { background:#171F33; border:1px solid rgba(255,255,255,.08); border-radius:1.25rem; padding:1.5rem; width:100%; max-height:90vh; overflow-y:auto; }
-  .scrollbar-thin::-webkit-scrollbar { height:6px; width:6px; }
-  .scrollbar-thin::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:999px; }
-  ::selection { background:#D6A94A; color:#0E1424; }
-  input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible { outline:2px solid #D6A94A; outline-offset:1px; }
-  .toast-enter { animation: toastIn .25s ease-out; }
-  @keyframes toastIn { from{ opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
-  @media (prefers-reduced-motion: reduce){ .thermo-fill::after{animation:none;} .thermo-fill{transition:none;} html{scroll-behavior:auto;} }
+:root{
+ --paper:#F3F5F1;--panel:#FFFFFF;--ink:#16302B;--ink2:#4A5D57;--line:#D6DDD7;--soft:#E8ECE7;
+ --solar:#D98E04;--store:#23767A;--grid:#8592A0;--curt:#C9CFC9;--good:#2E7A45;--bad:#B4442E;--focus:#23767A;
+ color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+ --paper:#101A18;--panel:#172421;--ink:#E4ECE8;--ink2:#A3B3AD;--line:#2C3C38;--soft:#1E2E2A;
+ --solar:#F0AA2A;--store:#4FB3B5;--grid:#7F8C99;--curt:#3A4A46;--good:#5DBB7A;--bad:#E47A63;--focus:#4FB3B5;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font:15px/1.5 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+.num,.big{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+header.top{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;align-items:flex-end;padding:22px 28px 18px;border-bottom:3px solid var(--ink)}
+.brand{font-weight:700;font-size:15px;letter-spacing:.02em}
+.brand span{color:var(--solar)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:30px;line-height:1.1;margin:4px 0 0}
+.meta{font-size:13px;color:var(--ink2);text-align:right}
+.meta b{color:var(--bad);font-weight:600}
+.layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:0;align-items:start}
+aside{position:sticky;top:0;max-height:100vh;overflow:auto;border-right:1px solid var(--line);padding:16px 18px 40px;background:var(--panel)}
+main{padding:22px 28px 60px;min-width:0}
+details.grp{border-bottom:1px solid var(--line);padding:8px 0}
+details.grp>summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between;padding:4px 0}
+details.grp>summary::after{content:"+";color:var(--ink2)}
+details.grp[open]>summary::after{content:"−"}
+.ctl{margin:10px 0 12px}
+.ctl label{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink2)}
+.ctl .vin{display:flex;align-items:center;gap:4px}
+.ctl input[type=number]{width:78px;font:inherit;font-size:13px;text-align:right;padding:2px 4px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink)}
+.ctl .u{font-size:12px;color:var(--ink2);min-width:20px}
+.ctl input[type=range]{width:100%;accent-color:var(--store);margin:4px 0 0}
+.ctl .note{font-size:11.5px;color:var(--ink2);margin-top:2px}
+.ctl.locked input{opacity:.55}
+.toggle{display:flex;gap:8px;align-items:center;font-size:13px;margin:8px 0}
+select{font:inherit;font-size:13px;padding:3px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:3px}
+button,.btn{font:inherit;font-size:13px;font-weight:600;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:7px 12px;border-radius:3px;cursor:pointer;text-decoration:none;display:inline-block}
+button.primary,.btn.primary{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+section{margin:0 0 34px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:22px;margin:0 0 4px}
+.sub{color:var(--ink2);font-size:13.5px;margin:0 0 14px;max-width:78ch}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:28px;align-items:center;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.hero .label{font-size:14px;color:var(--ink2)}
+.hero .big{font-size:68px;font-weight:700;line-height:1;margin:6px 0 2px}
+.hero .big small{font-size:22px;font-weight:500;color:var(--ink2)}
+.verdict{display:inline-block;margin-top:10px;font-weight:600;font-size:14px;padding:4px 10px;border-radius:3px}
+.verdict.good{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.verdict.bad{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.stackwrap{min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.metrics>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 12px;background:var(--panel)}
+.metrics .k{font-size:12.5px;color:var(--ink2)}
+.metrics .v{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:600;line-height:1.15}
+.metrics .s{font-size:12px;color:var(--ink2)}
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--soft);text-align:right;white-space:nowrap}
+th{font-weight:600;color:var(--ink2);background:var(--soft);position:sticky;top:0}
+td:first-child,th:first-child{text-align:left}
+tr.sel td{background:color-mix(in srgb,var(--store) 12%,transparent);font-weight:600}
+tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+.neg{color:var(--bad)}.pos{color:var(--good)}
+.chart{background:var(--panel);border:1px solid var(--line);padding:12px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:560px;height:auto}
+.notes{font-size:13px;color:var(--ink2);max-width:90ch}
+.notes li{margin:0 0 6px}
+.flag{color:var(--bad);font-weight:600}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.share{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+#busy{font-size:12px;color:var(--ink2);margin-left:6px}
+.reco{margin-top:26px;border:1px solid var(--line);background:var(--panel)}
+.recohead{display:flex;gap:18px;align-items:stretch;border-bottom:1px solid var(--line)}
+.badge{min-width:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:26px;line-height:1.05;padding:16px;color:#fff}
+.badge.go{background:var(--good)}.badge.hold{background:#B7791F}.badge.no{background:var(--bad)}
+.recohead .txt{padding:14px 18px 10px 0}
+.recohead h2{margin:0 0 4px}
+.recobody{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:0}
+.recobody>div{padding:14px 18px}
+.recobody>div+div{border-left:1px solid var(--line)}
+h3{font-size:15px;font-weight:600;margin:0 0 8px}
+.recobody table{font-size:13.5px}
+.recobody td{white-space:normal}
+.ok{color:var(--good);font-weight:700}.fail{color:var(--bad);font-weight:700}
+.levers{border-top:1px solid var(--line);padding:12px 18px 14px;font-size:14px}
+.levers ul{margin:6px 0 0;padding-left:18px}.levers li{margin-bottom:4px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}.hero{grid-template-columns:1fr}main{padding:18px}.hero .big{font-size:56px}}
+@media print{aside{display:none}.layout{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
-<body class="bg-ink text-[#EDEFF5] font-body min-h-screen pb-16">
-
-  <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm"></div>
-
-  <!-- ============ HEADER + TABS ============ -->
-  <div class="sticky top-0 z-40 bg-ink/95 backdrop-blur border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-      <div class="flex items-center gap-3 shrink-0">
-        <div class="w-10 h-10 rounded-xl bg-gold/15 flex items-center justify-center shrink-0">
-          <i data-lucide="trophy" class="w-5 h-5 text-gold"></i>
-        </div>
-        <h1 class="font-display text-lg md:text-2xl uppercase tracking-wide leading-tight">August Delivery Cup</h1>
-      </div>
-
-      <div class="flex-1 max-w-xl">
-        <div class="flex items-baseline justify-between mb-1">
-          <span class="text-[11px] uppercase tracking-widest text-slateTxt">Team Goal Progress</span>
-          <span id="hdr-badge" class="text-[11px] font-semibold"></span>
-        </div>
-        <div class="thermo-track"><div id="hdr-fill" class="thermo-fill" style="width:0%"></div></div>
-        <div class="flex justify-between mt-1">
-          <span id="hdr-score" class="font-mono text-sm text-white">0</span>
-          <span class="font-mono text-sm text-slateTxt">/ 1,400 PTS</span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 shrink-0">
-        <button id="sync-badge" class="px-3 py-1.5 rounded-full text-xs font-medium bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-colors">🟡 Local Storage</button>
-        <button id="gear-btn" class="w-9 h-9 rounded-xl bg-surface hover:bg-surface2 flex items-center justify-center transition-colors" title="Cloud Sync Settings">
-          <i data-lucide="settings" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-
-    <nav>
-      <div id="tab-buttons" class="flex gap-1 px-4 md:px-8 overflow-x-auto scrollbar-thin border-t border-white/5">
-        <button data-tab="leaderboard" class="tab-btn tab-btn-active"><i data-lucide="trophy" class="w-4 h-4"></i>Leaderboard</button>
-        <button data-tab="dataentry" class="tab-btn"><i data-lucide="edit-3" class="w-4 h-4"></i>Data Entry</button>
-        <button data-tab="auditlog" class="tab-btn"><i data-lucide="shield-check" class="w-4 h-4"></i>Audit Log</button>
-        <button data-tab="rules" class="tab-btn"><i data-lucide="book-open" class="w-4 h-4"></i>Rules</button>
-      </div>
-    </nav>
+<body>
+<header class="top">
+ <div>
+  <div class="brand">Alendei <span>Green RE</span> Pvt. Ltd.</div>
+  <h1>Cost sheet: Group captive Solar + BESS for Balkrishna Industries Ltd, MIDC Waluj</h1>
+ </div>
+ <div class="meta">Internal use only. <b>Not for customer circulation.</b><br>Prepared 05-Nov-2026. Billing basis: MSEDCL HT-I A, 33 kV, consumer no. ending 6750.</div>
+</header>
+<div class="layout">
+<aside aria-label="Model inputs">
+ <div class="toggle"><input type="checkbox" id="autosize" checked><label for="autosize">Auto-size plant to the RE target (lowest tariff)</label><span id="busy"></span></div>
+ <div id="controls"></div>
+ <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button id="reset">Reset to defaults</button></div>
+</aside>
+<main>
+ <section class="hero" aria-live="polite">
+  <div>
+   <div class="label" id="heroLabel">Minimum tariff for a 7-year project payback</div>
+   <div class="big" id="heroT">₹0.00 <small>/kWh</small></div>
+   <div class="label">Year-1 base tariff at the plant busbar, escalating <span id="heroEsc"></span> per year</div>
+   <div class="verdict" id="verdict"></div>
   </div>
-
-  <!-- ============ MAIN ============ -->
-  <main class="max-w-7xl mx-auto px-4 md:px-8 py-6">
-    <section id="tab-leaderboard" class="tab-panel"></section>
-    <section id="tab-dataentry" class="tab-panel hidden"></section>
-    <section id="tab-auditlog" class="tab-panel hidden"></section>
-    <section id="tab-rules" class="tab-panel hidden"></section>
-  </main>
-
-  <!-- ============ SETTINGS MODAL ============ -->
-  <div id="modal-settings" class="modal-overlay hidden">
-    <div class="modal-card max-w-md">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-display text-lg uppercase tracking-wide">Cloud Sync Settings</h3>
-        <button data-action="close" class="text-slateTxt hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <p class="text-xs text-slateTxt mb-4">Powered by JSONBin.io. Your Master Key is stored only in this browser's local storage — it's sent directly to JSONBin.io and nowhere else.</p>
-
-      <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">JSONBin Bin ID</label>
-      <input id="set-binid" placeholder="e.g. 64f1a2b3c4d5e6f7a8b9c0d1" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-3 font-mono" />
-
-      <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Master API Key</label>
-      <div class="relative mb-3">
-        <input id="set-key" type="password" placeholder="$2b$10$…" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-0 font-mono pr-10" />
-        <button type="button" data-action="toggle-key-visibility" class="absolute right-2 top-1/2 -translate-y-1/2 text-slateTxt hover:text-white"><i data-lucide="eye" class="w-4 h-4"></i></button>
-      </div>
-
-      <p id="set-connected-note" class="text-xs text-mint mb-2 hidden"></p>
-      <p id="set-message" class="text-xs mb-3 min-h-[1rem] text-slateTxt"></p>
-
-      <div class="flex gap-2 mb-4">
-        <button data-action="connect" class="flex-1 bg-gold text-ink font-semibold rounded-xl py-2.5 text-sm hover:bg-goldBright transition-colors">Connect &amp; Sync</button>
-        <button data-action="disconnect" id="set-disconnect" class="hidden px-4 bg-surface2 hover:bg-white/10 rounded-xl text-sm transition-colors">Disconnect</button>
-      </div>
-
-      <label class="flex items-center gap-2 mb-4 cursor-pointer">
-        <input type="checkbox" id="set-autosync" class="w-4 h-4 accent-gold" checked />
-        <span class="text-sm">Auto-sync to cloud on every change</span>
-      </label>
-
-      <div class="flex gap-2 pt-4 border-t border-white/10">
-        <button data-action="export-json" class="flex-1 bg-surface2 hover:bg-white/10 rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 transition-colors"><i data-lucide="download" class="w-4 h-4"></i>Export JSON</button>
-        <label class="flex-1 bg-surface2 hover:bg-white/10 rounded-xl py-2.5 text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors">
-          <i data-lucide="upload" class="w-4 h-4"></i>Import JSON
-          <input type="file" id="set-import-file" accept="application/json" class="hidden" />
-        </label>
-      </div>
-
-      <div class="mt-4 pt-4 border-t border-white/10">
-        <button data-action="reset-data" class="w-full bg-coral/10 text-coral border border-coral/20 hover:bg-coral/20 rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i>Reset All Data</button>
-        <p class="text-[11px] text-slateTxt/70 mt-2 text-center">Clears every log for the whole team and overwrites the cloud bin too if connected. Cannot be undone.</p>
-      </div>
-    </div>
+  <div class="stackwrap">
+   <div class="label">Landed cost at the factory versus today's grid cost (year 1, ₹/kWh)</div>
+   <div id="stack"></div>
+   <div class="legend"><span><i style="background:var(--solar)"></i>Base tariff</span><span><i style="background:#E7B65A"></i>Loss gross-up</span><span><i style="background:var(--store)"></i>Transmission</span><span><i style="background:#6FA9A6"></i>Wheeling</span><span><i style="background:var(--grid)"></i>SLDC, banking, duty</span></div>
   </div>
+ </section>
 
-  <!-- ============ VERIFY MODAL ============ -->
-  <div id="modal-verify" class="modal-overlay hidden">
-    <div class="modal-card max-w-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-display text-lg uppercase tracking-wide">Confirm <span id="verify-action-label"></span></h3>
-        <button data-action="close" class="text-slateTxt hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <p class="text-sm text-slateTxt mb-3">Log <span id="verify-log-id" class="font-mono text-white"></span></p>
-      <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Verified By</label>
-      <select id="verify-select" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-5">
-        <option value="">Select your name…</option>
-        <option value="Ronak">Ronak</option>
-        <option value="Ved">Ved</option>
-        <option value="Shrey">Shrey</option>
-        <option value="Vishal">Vishal</option>
-        <option value="Richa">Richa</option>
-        <option value="Rutvi">Rutvi</option>
-        <option value="Dax">Dax</option>
-      </select>
-      <button data-action="confirm-verify" class="w-full bg-gold text-ink font-semibold rounded-xl py-2.5 hover:bg-goldBright transition-colors">Confirm</button>
-    </div>
+ <section class="reco" aria-live="polite">
+  <div class="recohead"><div class="badge" id="recoBadge"></div><div class="txt"><h2 id="recoTitle"></h2><p class="sub" id="recoText" style="margin:0"></p></div></div>
+  <div class="recobody">
+   <div><h3>Decision checks at the offer tariff</h3><table id="checks"></table></div>
+   <div><h3>Total benefit to Alendei over the term (₹ Cr)</h3><table id="benefit"></table></div>
   </div>
+  <div class="levers" id="levers"></div>
+ </section>
 
-  <!-- ============ PENALTY MODAL ============ -->
-  <div id="modal-penalty" class="modal-overlay hidden">
-    <div class="modal-card max-w-md">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-display text-lg uppercase tracking-wide text-coral">Log Penalty</h3>
-        <button data-action="close" class="text-slateTxt hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <form id="penalty-form" class="space-y-4">
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Team Member</label>
-          <select id="pen-member" required class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm">
-            <option value="">Select…</option>
-            <option value="ronak">Ronak</option>
-            <option value="ved">Ved</option>
-            <option value="shrey">Shrey</option>
-            <option value="vishal">Vishal</option>
-            <option value="richa">Richa</option>
-            <option value="rutvi">Rutvi</option>
-            <option value="dax">Dax</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Penalty Type</label>
-          <select id="pen-preset" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm">
-            <option value="lazy">Lazy Escalation (−15 pts)</option>
-            <option value="custom">Custom Penalty</option>
-          </select>
-        </div>
-        <div id="pen-custom-fields" class="hidden space-y-3">
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Reason</label>
-            <input id="pen-reason" placeholder="Describe the penalty reason" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm" />
-          </div>
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Points to Deduct</label>
-            <input id="pen-points" type="number" min="0" value="15" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm font-mono" />
-          </div>
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Sprint Week</label>
-          <select id="pen-week" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm">
-            <option value="W2">W2</option><option value="W3">W3</option><option value="W4">W4</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Proof Link (optional)</label>
-          <input id="pen-proof" placeholder="MS-Tasks / Helpdesk Report ID" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm" />
-        </div>
-        <button type="submit" class="w-full bg-coral text-white font-semibold rounded-xl py-2.5 hover:opacity-90 transition-opacity">Log Penalty for Review</button>
-      </form>
-    </div>
+ <section style="margin-top:26px">
+  <h2>Plant and returns</h2>
+  <p class="sub">Figures follow the offer tariff selected under "PPA and pricing". Plant size comes from the auto-sizer when it is on, or from the size inputs when it is off.</p>
+  <div class="metrics" id="metrics"></div>
+ </section>
+
+ <section>
+  <h2>Pricing options</h2>
+  <p class="sub">Each row prices the same plant differently. The highlighted row feeds the returns above and the customer term sheet. Saving is year 1 landed cost against the grid cost.</p>
+  <div class="tw"><table id="options"></table></div>
+ </section>
+
+ <section class="two">
+  <div>
+   <h2>Capital cost</h2>
+   <p class="sub">GST is not recoverable because electricity supply is GST-exempt, so it is capitalised.</p>
+   <div class="tw"><table id="capexT"></table></div>
   </div>
+  <div>
+   <h2>Year-1 energy balance</h2>
+   <p class="sub" id="energySub"></p>
+   <div class="tw"><table id="energyT"></table></div>
+  </div>
+ </section>
 
+ <section>
+  <h2>Monthly supply versus factory load (year 1)</h2>
+  <p class="sub">Delivered at the factory after losses. The monsoon months show where the near-RTC target is hardest to hold.</p>
+  <div class="chart" id="monthly"></div>
+  <div class="legend"><span><i style="background:var(--solar)"></i>Solar, direct</span><span><i style="background:var(--store)"></i>Solar via BESS</span><span><i style="background:var(--soft);border:1px solid var(--grid)"></i>Residual grid draw</span><span><i style="background:var(--curt)"></i>Curtailed solar (at plant)</span></div>
+ </section>
+
+ <section>
+  <h2>What moves the landed cost</h2>
+  <p class="sub">Landed cost at the payback-target tariff when one input moves while the rest stay fixed. Plant size is held, except in the RE-share row, which is re-sized. Interest rate is not shown because project payback is measured on unlevered cash flow; it moves equity IRR and DSCR instead.</p>
+  <div class="chart" id="tornado"></div>
+ </section>
+
+ <section>
+  <h2>25-year cash flow at the offer tariff (₹ Cr)</h2>
+  <p class="sub">Project payback uses post-tax, unlevered cash flow against total capex including GST. DSCR = (EBITDA − tax) ÷ debt service.</p>
+  <div class="tw" style="max-height:520px"><table id="cf"></table></div>
+ </section>
+
+ <section>
+  <h2>Customer bill reference (Oct-2025 to Sep-2026)</h2>
+  <p class="sub">From MSEDCL bills. kVAh is the billed unit. The load profile in the model follows these monthly volumes.</p>
+  <div class="tw"><table id="bills"></table></div>
+ </section>
+
+ <section>
+  <h2>Customer term sheet</h2>
+  <p class="sub">The term sheet opens with this plant, these charges and this pricing rule. Keep both HTML files in the same folder. The term sheet does not show Alendei's payback, IRR or DSCR.</p>
+  <div class="share"><a class="btn primary" id="tsLink" href="#">Open term sheet with these values</a><button id="copyCfg">Copy configuration code</button><span id="copied" class="sub" style="margin:0"></span></div>
+ </section>
+
+ <section>
+  <h2>Assumptions, sources and items to verify</h2>
+  <ul class="notes">
+   <li><span class="flag">Verify:</span> open access charges are defaults to check against current MERC orders and MSEDCL/STU notifications before quoting. Wheeling ₹0.81/kWh is the HT wheeling rate printed on the customer's FY 2026-27 bills. Transmission ₹0.40/kWh is an industry estimate; MERC's InSTS order (Case 208 of 2024) sets long-term charges in ₹/kW/month. Wheeling loss 6% and transmission loss 3% are conservative assumptions; published HT wheeling-loss figures vary widely between sources.</li>
+   <li>Cross-subsidy surcharge and additional surcharge are taken as nil for a compliant group captive (≥26% equity, ≥51% consumption). A grid-connected plant may avoid MSEDCL wheeling if it injects into the STU network and the consumer is EHV-connected; MERC has ruled so in several cases. This customer draws at 33 kV, so wheeling is retained by default.</li>
+   <li>MERC's draft 2026 open access regulations propose banking and standby charges (working-group base case ₹139/kW/month). The banking/grid-support input is set to nil and should be revisited once the regulations are final.</li>
+   <li>Energy model: a daily balance per month. Solar first meets the factory's daytime load, the surplus charges the BESS, and the BESS discharges at night up to its usable capacity. Surplus beyond that is curtailed, with no banking credit. Monthly solar shape is an inferred Marathwada fixed-tilt profile; replace it with PVsyst output once a site is chosen.</li>
+   <li>Savings use the full ₹11.22/kWh average grid cost, as instructed. This overstates savings: MSEDCL demand charges (₹45–51 lakh/month on 9,500 kVA), the region subsidy and the incremental consumption rebate do not all scale down with open access units.</li>
+   <li>The existing 2.375 MW behind-the-meter rooftop plant is excluded; the target applies to grid-metered consumption only.</li>
+   <li>Tax: corporate rate and 40% WDV depreciation on the full capitalised block, with losses carried forward. Replacement capex (inverters, BESS augmentation) is added to the block in the year incurred. GST rates on solar EPC (composite) and BESS should be confirmed with tax advisers.</li>
+   <li>Customer dividends assume all positive equity cash flow is distributed pro rata to shareholding.</li>
+   <li>Alendei margin is modelled as a per-unit fee paid by the SPV to Alendei (for example under an O&M or asset-management agreement). It is a tax-deductible SPV cost, so the tariff solve recovers it and the payback target still holds. Alendei benefit = its equity share of SPV equity cash flow + margin income − its equity investment. Margin income is shown pre-tax at Alendei level.</li>
+   <li>The recommendation applies fixed rules: customer saving, project payback, Alendei IRR, minimum DSCR and RE share against the criteria set in the inputs. It is a screening aid, not an investment decision.</li>
+   <li>These figures are for internal pricing decisions; verify with a qualified professional before acting.</li>
+  </ul>
+ </section>
+</main>
+</div>
 <script>
-/* =========================================================================
-   August Delivery Cup — Master Scorecard & Ops Dashboard
-   Single-file vanilla JS app. JSONBin.io cloud sync + localStorage fallback.
-   ========================================================================= */
+/* ===== Shared model engine (identical in cost sheet and term sheet) ===== */
+const BILL_MONTHS=['Oct-25','Nov-25','Dec-25','Jan-26','Feb-26','Mar-26','Apr-26','May-26','Jun-26','Jul-26','Aug-26','Sep-26'];
+const BILL_KVAH=[2762160,3301867,3590318,3375804,3142695,3393708,3382052,3432424,3398182,3766688,3535602,3077078];
+const BILL_AMT=[30511333,35243520,38345323,36931494,35171087,39507335,40170244,38178659,38407799,41829333,39085321,35536904];
+const CUF_PROF=[1.00,1.03,1.00,1.05,1.15,1.18,1.18,1.15,0.93,0.73,0.76,0.86];
+const DAYS=[31,30,31,31,28,31,30,31,30,31,31,30];
+function defaults(){return{
+ annualMU:39.70,dayShare:0.38,target:0.90,autosize:1,
+ solarMW:26.5,cuf:0.20,deg1:0.010,deg:0.005,solarCapex:4.00,solarGST:0.089,evac:0.25,invRep:0.15,invEvery:10,solarOM:4.0,
+ bessMWh:78,dod:0.90,rte:0.88,bessDeg:0.020,bessCapex:1.30,bessGST:0.18,augYear:12,augPct:0.45,bessOM:1.2,
+ insur:0.0035,acresPerMW:4,leasePerAcre:30000,admin:30,omEsc:0.05,
+ debt:0.70,rate:0.10,tenor:10,tax:0.2517,wdv:0.40,
+ term:25,esc:0.02,payback:7,
+ trans:0.40,tLoss:0.03,wheel:0.81,wLoss:0.06,sldc:0.03,bank:0,ed:0,oaEsc:0.02,
+ grid:11.22,gridEsc:0.02,custEq:0.26,savTarget:0.05,
+ mode:'payback',custom:9.00,
+ margin:0.25,hurdle:0.15,dscrReq:1.20,minSave:0.05
+}}
+const KV_SUM=BILL_KVAH.reduce((a,b)=>a+b,0);
+const CUF_MEAN=CUF_PROF.reduce((a,b,i)=>a+b*DAYS[i],0)/365;
+function eta(p){return(1-p.tLoss)*(1-p.wLoss)}
+function energyYear(p,sf,soh){
+ const et=eta(p);let inj=0,deliv=0,curt=0,gen=0,load=0;const months=[];
+ for(let m=0;m<12;m++){
+  const L=p.annualMU*1e3*BILL_KVAH[m]/KV_SUM/DAYS[m];
+  const G=p.solarMW*p.cuf*(CUF_PROF[m]/CUF_MEAN)*24*sf;
+  const Dday=L*p.dayShare/et,Dn=L*(1-p.dayShare)/et;
+  const direct=Math.min(G,Dday),surplus=G-direct;
+  const U=p.bessMWh*p.dod*soh;
+  const dis=Math.min(surplus*p.rte,U,Dn);
+  const c=surplus-dis/p.rte,d=DAYS[m];
+  inj+=(direct+dis)*d;deliv+=(direct+dis)*et*d;curt+=c*d;gen+=G*d;load+=L*d;
+  months.push({m:BILL_MONTHS[m],load:L*d,direct:direct*et*d,bess:dis*et*d,curt:c*d,gen:G*d});
+ }
+ return{inj,deliv,curt,gen,load,cov:deliv/load,months};
+}
+function capex(p){const s=p.solarMW*p.solarCapex,b=p.bessMWh*p.bessCapex,e=p.solarMW*p.evac,gs=s*p.solarGST,gb=b*p.bessGST;
+ return{solar:s,bess:b,evac:e,gstS:gs,gstB:gb,gst:gs+gb,total:s+b+e+gs+gb}}
+function landedAt(p,T,y){const f=Math.pow(1+p.oaEsc,y-1);return T*Math.pow(1+p.esc,y-1)/eta(p)+(p.trans+p.wheel+p.sldc+p.bank+p.ed)*f}
+function oaPerUnit(p){return p.trans+p.wheel+p.sldc+p.bank+p.ed}
+function cashflows(p,T){
+ const C=capex(p),debt=C.total*p.debt,eq=C.total-debt,r=p.rate,n=Math.round(p.tenor);
+ const emi=r>0?debt*r/(1-Math.pow(1+r,-n)):debt/n;
+ let bal=debt,block=C.total,cum=-C.total,payback=null,loss=0,lossU=0;const rows=[];
+ for(let y=1;y<=p.term;y++){
+  const sf=(1-p.deg1)*Math.pow(1-p.deg,y-1);
+  const age=y<=p.augYear?y-1:y-p.augYear;const soh=Math.max(0.5,1-p.bessDeg*age);
+  const E=energyYear(p,sf,soh);
+  const tariff=T*Math.pow(1+p.esc,y-1),rev=E.inj*1e3*tariff/1e7;
+  const ef=Math.pow(1+p.omEsc,y-1);
+  const om=(p.solarMW*p.solarOM+p.bessMWh*p.bessOM)/100*ef,ins=C.total*p.insur,
+   lease=p.solarMW*p.acresPerMW*p.leasePerAcre*Math.pow(1.03,y-1)/1e7,adm=p.admin/100*ef;
+  const mfee=E.inj*1e3*(p.margin||0)*Math.pow(1+p.esc,y-1)/1e7;
+  const opex=om+ins+lease+adm+mfee,ebitda=rev-opex;
+  let rep=0;if(p.invEvery>0&&y%Math.round(p.invEvery)===0&&y<p.term)rep+=p.solarMW*p.invRep;
+  if(y===Math.round(p.augYear)&&y<p.term)rep+=C.bess*p.augPct*(1+p.bessGST);
+  block+=rep;const dep=block*p.wdv;block-=dep;
+  const interest=y<=n?bal*r:0,prin=y<=n?emi-interest:0;bal-=prin;
+  let tiU=ebitda-dep,txU=0;if(tiU<0)lossU+=-tiU;else{const u=Math.min(lossU,tiU);lossU-=u;txU=(tiU-u)*p.tax}
+  let ti=ebitda-dep-interest,tx=0;if(ti<0)loss+=-ti;else{const u=Math.min(loss,ti);loss-=u;tx=(ti-u)*p.tax}
+  const fcf=ebitda-txU-rep,fcfe=ebitda-tx-rep-interest-prin;
+  const prev=cum;cum+=fcf;if(payback===null&&cum>=0)payback=y-1+(-prev)/fcf;
+  const dscr=y<=n?(ebitda-tx)/(interest+prin):null;
+  const land=landedAt(p,T,y),grid=p.grid*Math.pow(1+p.gridEsc,y-1);
+  const sav=E.deliv*1e3*(grid-land)/1e7;
+  rows.push({y,inj:E.inj,deliv:E.deliv,load:E.load,cov:E.cov,tariff,rev,opex,ebitda,dep,interest,prin,tax:tx,rep,fcf,fcfe,cum,dscr,land,grid,sav,margin:mfee,div:Math.max(0,fcfe)*p.custEq,aCF:fcfe*(1-p.custEq)+mfee});
+ }
+ const ds=rows.filter(x=>x.dscr!==null).map(x=>x.dscr);
+ return{C,debt,eq,rows,payback,projIRR:irr([-C.total,...rows.map(x=>x.fcf)]),eqIRR:irr([-eq,...rows.map(x=>x.fcfe)]),
+  minDSCR:ds.length?Math.min(...ds):null,avgDSCR:ds.length?ds.reduce((a,b)=>a+b,0)/ds.length:null,
+  aEq:eq*(1-p.custEq),aIRR:irr([-eq*(1-p.custEq),...rows.map(x=>x.aCF)]),
+  aNPV:-eq*(1-p.custEq)+rows.reduce((a,x,i)=>a+x.aCF/Math.pow(1+(p.hurdle||0.15),i+1),0),
+  aDiv:rows.reduce((a,x)=>a+x.fcfe*(1-p.custEq),0),aMargin:rows.reduce((a,x)=>a+x.margin,0)};
+}
+function irr(cf){let lo=-0.9,hi=1.5;const npv=x=>cf.reduce((a,c,i)=>a+c/Math.pow(1+x,i),0);if(npv(lo)*npv(hi)>0)return null;
+ for(let i=0;i<70;i++){const m=(lo+hi)/2;if(npv(m)>0)lo=m;else hi=m}return(lo+hi)/2}
+function tariffForPayback(p,yrs){let lo=0.5,hi=40;for(let i=0;i<40;i++){const m=(lo+hi)/2;const r=cashflows(p,m);if(r.payback!==null&&r.payback<=yrs)hi=m;else lo=m}return hi}
+function tariffForSaving(p,s){return Math.max(0,(p.grid*(1-s)-oaPerUnit(p))*eta(p))}
+function offerTariff(p){if(p.mode==='custom')return p.custom;if(p.mode==='savings')return tariffForSaving(p,p.savTarget);return tariffForPayback(p,p.payback)}
+function covAt(p,s,b){return energyYear(Object.assign({},p,{solarMW:s,bessMWh:b}),1-p.deg1,1).cov}
+function autoSize(p){
+ // for each solar size find the smallest BESS meeting the target; shortlist by capex per delivered unit, then solve tariff
+ const c=[];
+ for(let s=4;s<=90;s+=0.5){
+  if(covAt(p,s,400)<p.target)continue;
+  let lo=0,hi=400;if(covAt(p,s,0)>=p.target)hi=0;else{while(hi-lo>0.5){const m=(lo+hi)/2;if(covAt(p,s,m)>=p.target)hi=m;else lo=m}}
+  const b=Math.ceil(hi);const q=Object.assign({},p,{solarMW:s,bessMWh:b});
+  const E=energyYear(q,1-p.deg1,1);const k=capex(q);
+  const om=(s*p.solarOM+b*p.bessOM)/100+k.total*p.insur;
+  c.push({s,b,proxy:(k.total*0.11+om)/E.inj});
+ }
+ if(!c.length)return null;
+ c.sort((a,b)=>a.proxy-b.proxy);let best=null;
+ for(const x of c.slice(0,4)){const q=Object.assign({},p,{solarMW:x.s,bessMWh:x.b});const T=tariffForPayback(q,q.payback);if(!best||T<best.T)best={s:x.s,b:x.b,T}}
+ return best;
+}
+function cfgEncode(p){return btoa(unescape(encodeURIComponent(JSON.stringify(p))))}
+function cfgDecode(h){try{return JSON.parse(decodeURIComponent(escape(atob(h))))}catch(e){return null}}
+/* ===== formatting ===== */
+const inr=(x,d=0)=>Number(x).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const cr=(x,d=2)=>(x<0?'−':'')+'₹'+inr(Math.abs(x),d)+' Cr';
+const pct=(x,d=1)=>(x*100).toFixed(d)+'%';
+const rs=(x,d=2)=>(x<0?'−':'')+'₹'+inr(Math.abs(x),d);
 
-// ---------------------------------------------------------------------
-// CONFIG
-// ---------------------------------------------------------------------
-const TEAM_GOAL = 1400;
-const WEEKS = ['W2', 'W3', 'W4']; // W1 is intentionally excluded and not selectable anywhere
-const STORAGE_KEY = 'augustCupState';
-const STATE_VERSION = 3; // bump this whenever the data shape changes, so stale/demo browser state auto-resets
-
-const ROLE_META = {
-  PM:  { label: 'Project Mgmt & Consulting',    tint: '#D6A94A' },
-  ENG: { label: 'Engineering',                  tint: '#5FA8D3' },
-  PRD: { label: 'Product',                      tint: '#B48EAD' },
-  SUP: { label: 'Support',                      tint: '#3ECF8E' },
-  DEV: { label: 'Custom Dev & Ops Integration', tint: '#E6824D' },
-};
-
-const TEAM = [
-  { id: 'ronak',  name: 'Ronak',  role: 'PM'  },
-  { id: 'ved',    name: 'Ved',    role: 'ENG' },
-  { id: 'shrey',  name: 'Shrey',  role: 'ENG' },
-  { id: 'vishal', name: 'Vishal', role: 'DEV', secondaryRoles: ['ENG'] },
-  { id: 'richa',  name: 'Richa',  role: 'PRD' },
-  { id: 'rutvi',  name: 'Rutvi',  role: 'SUP' },
-  { id: 'dax',    name: 'Dax',    role: 'SUP' },
+const SCHEMA=[
+ ['Customer load and RE target',[
+  ['annualMU','Annual grid consumption',20,60,0.1,'MU'],
+  ['target','RE share target (auto-sizer)',0.30,0.98,0.01,'%','Share of grid consumption the plant should replace'],
+  ['dayShare','Load share in solar hours',0.25,0.55,0.01,'%','09:00–17:00 zone C is 34–36% on the bills'],
+ ],true],
+ ['Plant size',[
+  ['solarMW','Solar capacity',4,90,0.5,'MW-DC'],
+  ['bessMWh','BESS usable-rated capacity',0,400,1,'MWh'],
+ ],true],
+ ['Solar plant',[
+  ['cuf','CUF (DC basis, annual)',0.15,0.27,0.005,'%','Fixed tilt ~19–20%; single-axis tracker ~22–24%'],
+  ['solarCapex','Solar EPC cost (ex-GST)',2.5,5.5,0.05,'₹ Cr/MW'],
+  ['solarGST','GST on solar EPC',0,0.18,0.001,'%','Composite rate, confirm with tax advisers'],
+  ['evac','Evacuation, connectivity, development',0,1,0.01,'₹ Cr/MW'],
+  ['deg1','First-year degradation',0,0.03,0.001,'%'],
+  ['deg','Annual degradation',0,0.01,0.0005,'%'],
+  ['invRep','Inverter replacement cost',0,0.4,0.01,'₹ Cr/MW'],
+  ['invEvery','Inverter replacement interval',0,15,1,'yrs','0 means no replacement'],
+  ['solarOM','Solar O&M',1,10,0.1,'₹ L/MW/yr'],
+ ]],
+ ['Battery storage',[
+  ['bessCapex','BESS cost (ex-GST)',0.6,2.5,0.01,'₹ Cr/MWh'],
+  ['bessGST','GST on BESS',0,0.18,0.001,'%'],
+  ['dod','Usable depth of discharge',0.7,1,0.01,'%'],
+  ['rte','Round-trip efficiency',0.75,0.95,0.005,'%'],
+  ['bessDeg','Annual capacity fade',0,0.04,0.001,'%'],
+  ['augYear','Replacement / augmentation year',6,20,1,'yr'],
+  ['augPct','Augmentation cost',0,1,0.01,'%','Share of original BESS cost, GST added'],
+  ['bessOM','BESS O&M',0.3,4,0.1,'₹ L/MWh/yr'],
+ ]],
+ ['Other operating costs',[
+  ['insur','Insurance',0,0.01,0.0005,'%','Of total capex, per year'],
+  ['acresPerMW','Land requirement',2,6,0.1,'acres/MW'],
+  ['leasePerAcre','Land lease',0,100000,1000,'₹/acre/yr','Escalates 3% per year'],
+  ['admin','SPV admin, scheduling, forecasting',0,100,1,'₹ L/yr'],
+  ['omEsc','O&M escalation',0,0.08,0.005,'%'],
+ ]],
+ ['Financing and tax',[
+  ['debt','Debt share',0,0.85,0.01,'%'],
+  ['rate','Interest rate',0.07,0.14,0.0025,'%'],
+  ['tenor','Loan tenor',5,18,1,'yrs'],
+  ['tax','Corporate tax rate',0,0.35,0.0001,'%'],
+  ['wdv','Tax depreciation (WDV)',0.15,0.40,0.01,'%'],
+ ]],
+ ['PPA and pricing',[
+  ['term','PPA term',15,30,1,'yrs'],
+  ['esc','Tariff escalation',0,0.05,0.005,'%/yr'],
+  ['margin','Alendei margin',0,1.5,0.01,'₹/kWh','Fee from the SPV to Alendei on injected units, escalating with the tariff. Built into the tariff solve, so the payback target still holds.'],
+  ['payback','Project payback target',4,15,0.5,'yrs'],
+  ['savTarget','Target customer saving',0,0.25,0.005,'%','Used when the offer is "target saving"'],
+  ['custom','Custom offer tariff',4,14,0.01,'₹/kWh','Used when the offer is "custom"'],
+ ],true,'mode'],
+ ['Alendei decision criteria',[
+  ['hurdle','Alendei hurdle rate (equity IRR)',0.08,0.25,0.0025,'%','Also the discount rate for Alendei NPV'],
+  ['dscrReq','Minimum DSCR for lenders',1.0,1.6,0.05,'×'],
+  ['minSave','Minimum customer saving to win the deal',0,0.2,0.005,'%','Year-1 landed cost versus grid cost'],
+ ],true],
+ ['Open access charges (Maharashtra)',[
+  ['trans','Transmission charge',0,1.2,0.01,'₹/kWh'],
+  ['tLoss','Transmission loss',0,0.06,0.001,'%'],
+  ['wheel','Wheeling charge',0,1.5,0.01,'₹/kWh'],
+  ['wLoss','Wheeling loss',0,0.12,0.001,'%'],
+  ['sldc','SLDC and scheduling',0,0.2,0.01,'₹/kWh'],
+  ['bank','Banking / grid-support charge',0,1.5,0.01,'₹/kWh'],
+  ['ed','Electricity duty / tax on captive units',0,1,0.01,'₹/kWh'],
+  ['oaEsc','Escalation of OA charges',0,0.06,0.005,'%/yr'],
+ ]],
+ ['Customer baseline',[
+  ['grid','Current grid cost',6,16,0.01,'₹/kWh'],
+  ['gridEsc','Grid cost escalation',0,0.06,0.005,'%/yr'],
+  ['custEq','Customer equity in SPV',0.26,1,0.01,'%','Minimum 26% for group captive status'],
+ ]],
 ];
-
-// ---------------------------------------------------------------------
-// STATE
-// ---------------------------------------------------------------------
-let state = loadInitialState();
-let currentTab = 'leaderboard';
-let deState = { memberId: 'ronak', week: WEEKS[0], role: null };
-let auditFilters = { search: '', status: 'All', week: 'All', member: 'All' };
-let pendingVerify = null;
-
-function getMember(id) { return TEAM.find(m => m.id === id); }
-
-function logEntry({ num, memberId, type, week, desc, points, proofs, status, verifiedBy, meta, hoursAgo }) {
-  return {
-    id: 'LOG-' + String(num).padStart(4, '0'),
-    memberId, type, week, desc, points,
-    proofs: proofs || [], // one { task, link } per completed task — keeps every claim individually traceable
-    status, verifiedBy,
-    meta: meta || {},
-    ts: new Date(Date.now() - (hoursAgo == null ? 0 : hoursAgo) * 36e5).toISOString(),
-  };
+const PCT=new Set(SCHEMA.flatMap(g=>g[1]).filter(c=>c[5].startsWith('%')).map(c=>c[0]));
+let P=defaults();
+const disp=(k,v)=>PCT.has(k)?+(v*100).toFixed(3):v;
+const store=(k,v)=>PCT.has(k)?v/100:v;
+function buildControls(){
+ const root=document.getElementById('controls');root.innerHTML='';
+ SCHEMA.forEach(([title,items,open,extra])=>{
+  const d=document.createElement('details');d.className='grp';if(open)d.open=true;
+  d.innerHTML='<summary>'+title+'</summary>';
+  if(extra==='mode'){const w=document.createElement('div');w.className='ctl';
+   w.innerHTML='<label for="mode">Offer tariff basis</label><select id="mode" style="width:100%;margin-top:4px"><option value="payback">Minimum for payback target</option><option value="savings">Target customer saving</option><option value="custom">Custom tariff</option></select>';
+   d.appendChild(w)}
+  items.forEach(([k,lab,mn,mx,st,u,note])=>{
+   const w=document.createElement('div');w.className='ctl';w.dataset.k=k;
+   const smn=disp(k,mn),smx=disp(k,mx),sst=PCT.has(k)?+(st*100).toFixed(4):st;
+   w.innerHTML='<label for="n_'+k+'"><span>'+lab+'</span><span class="vin"><input type="number" id="n_'+k+'" min="'+smn+'" max="'+smx+'" step="'+sst+'"><span class="u">'+u+'</span></span></label>'+
+    '<input type="range" id="r_'+k+'" aria-label="'+lab+'" min="'+smn+'" max="'+smx+'" step="'+sst+'">'+(note?'<div class="note">'+note+'</div>':'');
+   d.appendChild(w)});
+  root.appendChild(d)});
+ SCHEMA.forEach(g=>g[1].forEach(([k])=>{
+  const n=document.getElementById('n_'+k),r=document.getElementById('r_'+k);
+  const set=v=>{if(isNaN(v))return;P[k]=store(k,v);n.value=v;r.value=v;if(k==='solarMW'||k==='bessMWh'){P.autosize=0;document.getElementById('autosize').checked=false}schedule(k)};
+  r.addEventListener('input',()=>set(parseFloat(r.value)));n.addEventListener('change',()=>set(parseFloat(n.value)));
+ }));
+ document.getElementById('mode').addEventListener('change',e=>{P.mode=e.target.value;schedule()});
+ syncControls();
 }
-
-// No seeded demo data — the team starts with a clean slate. Kept as a function
-// (returning an empty array) so a future test/demo seed can be dropped back in easily.
-function buildMockLogs() {
-  return [];
+function syncControls(){SCHEMA.forEach(g=>g[1].forEach(([k])=>{const v=disp(k,P[k]);document.getElementById('n_'+k).value=+(+v).toFixed(4);document.getElementById('r_'+k).value=v}));
+ document.getElementById('mode').value=P.mode;document.getElementById('autosize').checked=!!P.autosize;
+ ['solarMW','bessMWh'].forEach(k=>document.querySelector('.ctl[data-k="'+k+'"]').classList.toggle('locked',!!P.autosize))}
+let timer=null;
+function schedule(k){clearTimeout(timer);document.getElementById('busy').textContent=P.autosize?'re-sizing…':'';timer=setTimeout(()=>{run();document.getElementById('busy').textContent=''},P.autosize?160:30)}
+const SIZE_KEYS=new Set(['solarMW','bessMWh']);
+function run(){
+ if(P.autosize){const b=autoSize(P);if(b){P.solarMW=b.s;P.bessMWh=b.b}}
+ syncControls();render();
 }
-
-function defaultState() {
-  return {
-    version: STATE_VERSION,
-    teamGoal: TEAM_GOAL,
-    logs: buildMockLogs(),
-    nextLogNum: 1,
-    settings: { jsonbinId: '', jsonbinKey: '', autoSync: true, cloudConnected: false, lastSynced: null },
-  };
+function evalAt(T){const r=cashflows(P,T);return{T,r,land:landedAt(P,T,1),sav:1-landedAt(P,T,1)/P.grid}}
+function svgEl(w,h,inner){return '<svg viewBox="0 0 '+w+' '+h+'" role="img">'+inner+'</svg>'}
+function render(){
+ const et=eta(P),Tp=tariffForPayback(P,P.payback),T0=tariffForSaving(P,0),Ts=tariffForSaving(P,P.savTarget);
+ const offerT=P.mode==='custom'?P.custom:P.mode==='savings'?Ts:Tp;
+ const O=evalAt(offerT),r=O.r,y1=r.rows[0];
+ const labels={payback:'Minimum tariff for a '+P.payback+'-year project payback',savings:'Tariff for a '+pct(P.savTarget)+' customer saving',custom:'Custom offer tariff'};
+ document.getElementById('heroLabel').textContent=labels[P.mode];
+ document.getElementById('heroT').innerHTML=rs(offerT)+' <small>/kWh</small>';
+ document.getElementById('heroEsc').textContent=pct(P.esc);
+ const v=document.getElementById('verdict');const gap=O.land-P.grid;
+ if(gap<=0){v.className='verdict good';v.textContent='Landed '+rs(O.land)+': saves '+rs(-gap)+'/kWh ('+pct(-gap/P.grid)+') against the grid'}
+ else{v.className='verdict bad';v.textContent='Landed '+rs(O.land)+': '+rs(gap)+'/kWh ('+pct(gap/P.grid)+') above the grid cost'}
+ // stacked landed bar
+ const oa=[['Base tariff',offerT,'var(--solar)'],['Loss gross-up',offerT/et-offerT,'#E7B65A'],['Transmission',P.trans,'var(--store)'],['Wheeling',P.wheel,'#6FA9A6'],['SLDC, banking, duty',P.sldc+P.bank+P.ed,'var(--grid)']];
+ const W=640,H=118,max=Math.max(P.grid,O.land)*1.12,sx=x=>40+x/max*(W-60);let x=0,bars='';
+ oa.forEach(([n,val,c])=>{if(val<=0)return;bars+='<rect x="'+sx(x)+'" y="20" width="'+(sx(x+val)-sx(x))+'" height="34" fill="'+c+'"><title>'+n+': '+rs(val)+'</title></rect>';x+=val});
+ bars+='<rect x="'+sx(0)+'" y="66" width="'+(sx(P.grid)-sx(0))+'" height="22" fill="var(--grid)" opacity=".35"/>';
+ bars+='<line x1="'+sx(P.grid)+'" x2="'+sx(P.grid)+'" y1="10" y2="98" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 3"/>';
+ bars+='<text x="'+(sx(P.grid)+6)+'" y="83" font-size="13" fill="var(--ink)">Grid '+rs(P.grid)+'</text>';
+ bars+='<text x="'+(sx(O.land)+6)+'" y="42" font-size="13" font-weight="600" fill="var(--ink)">'+rs(O.land)+'</text>';
+ bars+='<text x="4" y="42" font-size="12" fill="var(--ink2)">RE</text><text x="4" y="82" font-size="12" fill="var(--ink2)">Grid</text>';
+ for(let t=0;t<=max;t+=2)bars+='<text x="'+sx(t)+'" y="112" font-size="11" text-anchor="middle" fill="var(--ink2)">'+t+'</text>';
+ document.getElementById('stack').innerHTML='<div class="chart" style="padding:6px;border:0;background:transparent">'+svgEl(W,H,bars).replace('<svg','<svg style="min-width:420px"')+'</div>';
+ // metrics
+ const nightMW=P.annualMU*(1-P.dayShare)*1e3/365/16;
+ const M=[
+  ['Solar capacity',inr(P.solarMW,1)+' MW-DC',P.autosize?'Auto-sized':'Manual'],
+  ['BESS capacity',inr(P.bessMWh,0)+' MWh','≈'+inr(nightMW,1)+' MW over ~16 night hours'],
+  ['RE share achieved',pct(y1.cov),'Target '+pct(P.target)],
+  ['Year-1 delivered',inr(y1.deliv/1e3,2)+' MU','Injected '+inr(y1.inj/1e3,2)+' MU'],
+  ['Total capex',cr(r.C.total,1),'₹'+inr(r.C.total/P.solarMW,2)+' Cr per MW-DC'],
+  ['Project payback',r.payback?inr(r.payback,1)+' yrs':'Not reached','Target '+P.payback+' yrs'],
+  ['Project IRR',r.projIRR!=null?pct(r.projIRR):'n/a','Post-tax, unlevered'],
+  ['Equity IRR',r.eqIRR!=null?pct(r.eqIRR):'n/a','Post-tax'],
+  ['Min / avg DSCR',r.minDSCR?r.minDSCR.toFixed(2)+' / '+r.avgDSCR.toFixed(2):'n/a',r.minDSCR&&r.minDSCR<1.2?'Below typical 1.2 lender floor':'Over loan tenor'],
+  ['Year-1 customer saving',cr(y1.sav,2),'Before dividends'],
+  ['Alendei IRR',r.aIRR!=null?pct(r.aIRR):'n/a','74% equity + margin, hurdle '+pct(P.hurdle)],
+  ['Alendei margin, year 1',cr(y1.margin,2),rs(P.margin)+'/kWh on '+inr(y1.inj/1e3,2)+' MU'],
+ ];
+ document.getElementById('metrics').innerHTML=M.map(m=>'<div><div class="k">'+m[0]+'</div><div class="v">'+m[1]+'</div><div class="s">'+m[2]+'</div></div>').join('');
+ // options
+ const opts=[['payback','Minimum for '+P.payback+'-yr payback',Tp],['parity','Grid parity (0% saving)',T0],['savings','Target saving '+pct(P.savTarget),Ts],['custom','Custom',P.custom]];
+ let h='<tr><th>Pricing basis</th><th>Busbar tariff</th><th>Landed</th><th>Saving</th><th>Payback</th><th>Project IRR</th><th>Equity IRR</th><th>Min DSCR</th><th>Alendei IRR</th><th>Alendei net benefit</th><th>25-yr customer saving</th></tr>';
+ opts.forEach(([k,n,T])=>{const e=evalAt(T),rr=e.r,tot=rr.rows.reduce((a,b)=>a+b.sav,0);
+  h+='<tr class="'+(k===P.mode?'sel':'')+'"><td>'+n+'</td><td>'+rs(T)+'</td><td>'+rs(e.land)+'</td><td class="'+(e.sav<0?'neg':'pos')+'">'+pct(e.sav)+'</td><td>'+(rr.payback?inr(rr.payback,1)+' yrs':'—')+'</td><td>'+(rr.projIRR!=null?pct(rr.projIRR):'—')+'</td><td>'+(rr.eqIRR!=null?pct(rr.eqIRR):'—')+'</td><td>'+(rr.minDSCR?rr.minDSCR.toFixed(2):'—')+'</td><td class="'+(tot<0?'neg':'')+'">'+cr(tot,1)+'</td></tr>'});
+ document.getElementById('options').innerHTML=h;
+ // capex
+ const C=r.C;document.getElementById('capexT').innerHTML='<tr><th>Item</th><th>Basis</th><th>₹ Cr</th></tr>'+
+  [['Solar EPC',inr(P.solarMW,1)+' MW × ₹'+P.solarCapex+' Cr',C.solar],['BESS',inr(P.bessMWh,0)+' MWh × ₹'+P.bessCapex+' Cr',C.bess],['Evacuation and development',inr(P.solarMW,1)+' MW × ₹'+P.evac+' Cr',C.evac],['GST on solar',pct(P.solarGST),C.gstS],['GST on BESS',pct(P.bessGST),C.gstB]]
+  .map(a=>'<tr><td>'+a[0]+'</td><td>'+a[1]+'</td><td>'+inr(a[2],2)+'</td></tr>').join('')+
+  '<tr class="tot"><td>Total capex</td><td></td><td>'+inr(C.total,2)+'</td></tr>'+
+  '<tr><td>Debt</td><td>'+pct(P.debt,0)+'</td><td>'+inr(r.debt,2)+'</td></tr><tr><td>Equity</td><td>'+pct(1-P.debt,0)+'</td><td>'+inr(r.eq,2)+'</td></tr>'+
+  '<tr><td>Customer equity ('+pct(P.custEq,0)+' of equity)</td><td></td><td>'+inr(r.eq*P.custEq,2)+'</td></tr>';
+ // energy
+ const E=energyYear(P,1-P.deg1,1);
+ document.getElementById('energySub').textContent='Combined loss factor '+pct(1-et,2)+' between plant and factory.';
+ document.getElementById('energyT').innerHTML='<tr><th>Item</th><th>MU</th><th>Share</th></tr>'+
+  [['Factory grid consumption (baseline)',E.load,1],['Solar generation at plant',E.gen,E.gen/E.load],['Injected at plant (billed by SPV)',E.inj,E.inj/E.load],['Delivered at factory',E.deliv,E.cov],['Curtailed solar',E.curt,E.curt/E.gen],['Residual grid draw',E.load-E.deliv,1-E.cov]]
+  .map((a,i)=>'<tr><td>'+a[0]+'</td><td>'+inr(a[1]/1e3,2)+'</td><td>'+(i===0?'':pct(a[2]))+(i===4?' of gen.':'')+'</td></tr>').join('');
+ // monthly chart
+ const mw=760,mh=260,bx=50,bw=(mw-bx-10)/12,mm=Math.max(...E.months.map(m=>Math.max(m.load,m.direct+m.bess+m.curt*et)))*1.08,sy=v=>mh-30-v/mm*(mh-50);
+ let g='';for(let t=0;t<=mm/1e3;t+=1)g+='<line x1="'+bx+'" x2="'+mw+'" y1="'+sy(t*1e3)+'" y2="'+sy(t*1e3)+'" stroke="var(--line)"/><text x="'+(bx-6)+'" y="'+(sy(t*1e3)+4)+'" font-size="11" text-anchor="end" fill="var(--ink2)">'+t+' MU</text>';
+ E.months.forEach((m,i)=>{const x=bx+i*bw+bw*0.15,w=bw*0.7;let y0=sy(0);
+  const seg=(v,c,t)=>{const y1=sy(0)-(sy(0)-sy(v));const hh=sy(0)-sy(v);g+='<rect x="'+x+'" y="'+(y0-hh)+'" width="'+w+'" height="'+hh+'" fill="'+c+'"><title>'+m.m+' '+t+': '+inr(v/1e3,2)+' MU</title></rect>';y0-=hh};
+  seg(m.direct,'var(--solar)','Solar direct');seg(m.bess,'var(--store)','Via BESS');
+  const res=Math.max(0,m.load-m.direct-m.bess);g+='<rect x="'+x+'" y="'+(y0-(sy(0)-sy(res)))+'" width="'+w+'" height="'+(sy(0)-sy(res))+'" fill="var(--soft)" stroke="var(--grid)" stroke-width="1"><title>'+m.m+' residual grid: '+inr(res/1e3,2)+' MU</title></rect>';y0-=sy(0)-sy(res);
+  if(m.curt>1){const hh=sy(0)-sy(m.curt);g+='<rect x="'+(x+w*0.25)+'" y="'+(y0-hh-3)+'" width="'+w*0.5+'" height="'+hh+'" fill="var(--curt)"><title>'+m.m+' curtailed: '+inr(m.curt/1e3,2)+' MU</title></rect>'}
+  g+='<text x="'+(x+w/2)+'" y="'+(mh-12)+'" font-size="11" text-anchor="middle" fill="var(--ink2)">'+m.m+'</text>';
+  g+='<text x="'+(x+w/2)+'" y="'+(sy(0)-(sy(0)-sy(m.direct+m.bess))/2+4)+'" font-size="10.5" text-anchor="middle" fill="#fff">'+Math.round((m.direct+m.bess)/m.load*100)+'%</text>'});
+ document.getElementById('monthly').innerHTML=svgEl(mw,mh,g);
+ renderReco(offerT,O,r,y1);
+ renderTornado(Tp);
+ // cash flow table
+ let c='<tr><th>Year</th><th>Delivered MU</th><th>RE share</th><th>Tariff ₹</th><th>Revenue</th><th>Opex</th><th>EBITDA</th><th>Interest</th><th>Principal</th><th>Tax</th><th>Replacement</th><th>Project FCF</th><th>Cumulative</th><th>Equity CF</th><th>DSCR</th><th>Alendei margin</th><th>Alendei CF</th><th>Landed ₹</th><th>Grid ₹</th><th>Cust. saving</th></tr>';
+ c+='<tr><td>0</td><td colspan="10" style="text-align:left">Construction, total capex incl. GST</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.eq,2)+'</td><td></td><td></td><td class="neg">'+inr(-r.aEq,2)+'</td><td colspan="3"></td></tr>';
+ r.rows.forEach(x=>{c+='<tr><td>'+x.y+'</td><td>'+inr(x.deliv/1e3,2)+'</td><td>'+pct(x.cov)+'</td><td>'+x.tariff.toFixed(2)+'</td><td>'+inr(x.rev,2)+'</td><td>'+inr(x.opex,2)+'</td><td>'+inr(x.ebitda,2)+'</td><td>'+inr(x.interest,2)+'</td><td>'+inr(x.prin,2)+'</td><td>'+inr(x.tax,2)+'</td><td>'+(x.rep?inr(x.rep,2):'–')+'</td><td>'+inr(x.fcf,2)+'</td><td class="'+(x.cum<0?'neg':'pos')+'">'+inr(x.cum,2)+'</td><td>'+inr(x.fcfe,2)+'</td><td>'+(x.dscr?x.dscr.toFixed(2):'–')+'</td><td>'+x.land.toFixed(2)+'</td><td>'+x.grid.toFixed(2)+'</td><td class="'+(x.sav<0?'neg':'')+'">'+inr(x.sav,2)+'</td></tr>'});
+ document.getElementById('cf').innerHTML=c;
+ // term sheet link
+ const cfg=Object.assign({},P,{offerT:offerT});
+ document.getElementById('tsLink').href='alendei_bkt_termsheet.html#cfg='+encodeURIComponent(cfgEncode(cfg));
+ window.__cfg=cfgEncode(cfg);
 }
-
-function loadInitialState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      // Only trust cached browser state if it matches the current data shape/version —
-      // this also guarantees any earlier demo/dummy data left over in a browser is discarded.
-      if (parsed && Array.isArray(parsed.logs) && parsed.version === STATE_VERSION) return parsed;
-    }
-  } catch (e) { console.warn('Could not read local storage', e); }
-  return defaultState();
+let recoToken=0;
+function checksFor(q,rr,land){const y=rr.rows[0],sav=1-land/q.grid;return[
+ ['Customer saving, year 1',pct(sav),'≥ '+pct(q.minSave),sav>=q.minSave-1e-9,'cust'],
+ ['Project payback',rr.payback?inr(rr.payback,1)+' yrs':'Not reached','≤ '+q.payback+' yrs',rr.payback!=null&&rr.payback<=q.payback+0.05,'dev'],
+ ['Alendei IRR (equity share + margin)',rr.aIRR!=null?pct(rr.aIRR):'n/a','≥ '+pct(q.hurdle),rr.aIRR!=null&&rr.aIRR>=q.hurdle,'dev'],
+ ['Minimum DSCR',rr.minDSCR?rr.minDSCR.toFixed(2):'n/a','≥ '+q.dscrReq.toFixed(2),rr.minDSCR==null||rr.minDSCR>=q.dscrReq,'dev'],
+ ['RE share achieved',pct(y.cov),'≥ '+pct(q.target),y.cov>=q.target-0.005,'cust'],
+]}
+function renderReco(T,O,r,y1){
+ const ch=checksFor(P,r,O.land),devOK=ch.filter(c=>c[4]==='dev').every(c=>c[3]),custOK=ch.filter(c=>c[4]==='cust').every(c=>c[3]);
+ const net=r.aDiv+r.aMargin-r.aEq,b=document.getElementById('recoBadge');let title,text;
+ if(devOK&&custOK){b.className='badge go';b.textContent='Proceed';title='Recommended: offer '+rs(T)+'/kWh with a '+rs(P.margin)+'/kWh margin';
+  text='All checks pass. Alendei earns '+(r.aIRR!=null?pct(r.aIRR):'n/a')+' on its equity with a net benefit of '+cr(net,1)+' over '+P.term+' years, and the customer saves '+pct(O.sav)+' in year 1.'}
+ else if(devOK){b.className='badge hold';b.textContent='Revise the offer';title='Returns work for Alendei, but the customer case is weak';
+  text='At '+rs(T)+'/kWh the customer\u2019s landed cost is '+rs(O.land)+' against '+rs(P.grid)+' from the grid'+(O.sav<0?', a premium of '+pct(-O.sav):', a saving of only '+pct(O.sav))+'. The deal is unlikely to close without a change in plant size, pricing or charges.'}
+ else if(custOK){b.className='badge hold';b.textContent='Do not offer at this tariff';title='The customer saves, but Alendei\u2019s returns fall short';
+  text='The customer saves '+pct(O.sav)+', but '+ch.filter(c=>c[4]==='dev'&&!c[3]).map(c=>c[0].toLowerCase()).join(' and ')+' miss the criteria. Raise the tariff or reduce cost before offering.'}
+ else{b.className='badge no';b.textContent='Not recommended';title='Neither Alendei\u2019s returns nor the customer\u2019s saving meet the criteria';
+  text='Change plant size, costs or pricing before taking this to the customer.'}
+ document.getElementById('recoTitle').textContent=title;document.getElementById('recoText').textContent=text;
+ document.getElementById('checks').innerHTML='<tr><th>Check</th><th>Result</th><th>Required</th><th></th></tr>'+ch.map(c=>'<tr><td>'+c[0]+'</td><td>'+c[1]+'</td><td>'+c[2]+'</td><td class="'+(c[3]?'ok':'fail')+'">'+(c[3]?'Pass':'Fail')+'</td></tr>').join('');
+ const npvTxt=cr(r.aNPV,1);
+ document.getElementById('benefit').innerHTML='<tr><th>Item</th><th>₹ Cr</th></tr>'+
+  [['Alendei equity investment ('+pct(1-P.custEq,0)+' of SPV equity)',-r.aEq],['Share of SPV equity cash flow',r.aDiv],['Margin income ('+rs(P.margin)+'/kWh, escalating)',r.aMargin]]
+  .map(a=>'<tr><td>'+a[0]+'</td><td class="'+(a[1]<0?'neg':'')+'">'+inr(a[1],2)+'</td></tr>').join('')+
+  '<tr class="tot"><td>Net benefit, nominal</td><td class="'+(net<0?'neg':'pos')+'">'+inr(net,2)+'</td></tr>'+
+  '<tr><td>NPV at '+pct(P.hurdle)+' hurdle</td><td class="'+(r.aNPV<0?'neg':'pos')+'">'+inr(r.aNPV,2)+'</td></tr>'+
+  '<tr><td>Alendei IRR</td><td>'+(r.aIRR!=null?pct(r.aIRR):'—')+'</td></tr>'+
+  '<tr><td style="font-size:12px;color:var(--ink2)" colspan="2">Margin income is pre-tax at Alendei level. Equity cash flow is post-tax at SPV level.</td></tr>';
+ const lev=document.getElementById('levers');
+ if(devOK&&custOK){lev.innerHTML='';return}
+ lev.innerHTML='<b>Alternatives checked</b><ul id="levList"><li>Checking alternatives…</li></ul>';
+ const tok=++recoToken,out=[];
+ // option A: hold plant, price at the minimum customer saving
+ const Ts=tariffForSaving(P,P.minSave),rs2=cashflows(P,Ts),cA=checksFor(P,rs2,landedAt(P,Ts,1));
+ out.push((cA.every(c=>c[3])?'':'<span class="fail">Fails: </span>')+'Keep this plant and price at '+rs(Ts)+'/kWh for a '+pct(P.minSave)+' saving: payback '+(rs2.payback?inr(rs2.payback,1)+' yrs':'not reached')+', Alendei IRR '+(rs2.aIRR!=null?pct(rs2.aIRR):'n/a')+', min DSCR '+(rs2.minDSCR?rs2.minDSCR.toFixed(2):'n/a')+'.');
+ const show=()=>{if(tok===recoToken)document.getElementById('levList').innerHTML=out.map(x=>'<li>'+x+'</li>').join('')};show();
+ // option B: highest RE share that passes, priced at the payback-target tariff (async)
+ const targets=[];for(let t=Math.min(0.95,Math.round(P.target*20)/20);t>=0.40-1e-9;t-=0.05)targets.push(+t.toFixed(2));
+ let i=0;out.push('Searching for the highest RE share that passes at the payback-target tariff…');show();
+ const step=()=>{if(tok!==recoToken)return;if(i>=targets.length){out[out.length-1]='No RE share between 40% and '+pct(targets[0],0)+' passes all checks at the payback-target tariff. Review costs, open access charges or the hurdle rate.';show();return}
+  const q=Object.assign({},P,{target:targets[i],mode:'payback'});const bs=autoSize(q);
+  if(bs){q.solarMW=bs.s;q.bessMWh=bs.b;const T2=tariffForPayback(q,q.payback),rr=cashflows(q,T2),l2=landedAt(q,T2,1);
+   if(checksFor(q,rr,l2).every(c=>c[3])){out[out.length-1]='Reduce the RE share to '+pct(targets[i],0)+' ('+inr(bs.s,1)+' MW-DC, '+bs.b+' MWh) at '+rs(T2)+'/kWh: landed '+rs(l2)+', saving '+pct(1-l2/q.grid)+', Alendei IRR '+pct(rr.aIRR)+', net benefit '+cr(rr.aDiv+rr.aMargin-rr.aEq,1)+'.';show();return}}
+  i++;setTimeout(step,0)};
+ setTimeout(step,30);
 }
-
-function saveLocal() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-  catch (e) { console.error('localStorage save failed', e); }
+function renderTornado(Tbase){
+ const base=landedAt(P,tariffForPayback(P,P.payback),1);
+ const fixed=Object.assign({},P);
+ const L=q=>landedAt(q,tariffForPayback(q,q.payback),1);
+ const resize=q=>{const b=autoSize(q);if(b){q.solarMW=b.s;q.bessMWh=b.b}return q};
+ const cases=[
+  ['Solar EPC ±10%',L(Object.assign({},fixed,{solarCapex:P.solarCapex*0.9})),L(Object.assign({},fixed,{solarCapex:P.solarCapex*1.1}))],
+  ['BESS cost ±10%',L(Object.assign({},fixed,{bessCapex:P.bessCapex*0.9})),L(Object.assign({},fixed,{bessCapex:P.bessCapex*1.1}))],
+  ['CUF ±1 point',L(Object.assign({},fixed,{cuf:P.cuf+0.01})),L(Object.assign({},fixed,{cuf:P.cuf-0.01}))],
+  ['BESS round-trip efficiency ±3 points',L(Object.assign({},fixed,{rte:Math.min(0.97,P.rte+0.03)})),L(Object.assign({},fixed,{rte:P.rte-0.03}))],
+  ['OA charges (transmission + wheeling) ±₹0.15',L(Object.assign({},fixed,{wheel:Math.max(0,P.wheel-0.15)})),L(Object.assign({},fixed,{wheel:P.wheel+0.15}))],
+  ['Wheeling loss ±2 points',L(Object.assign({},fixed,{wLoss:Math.max(0,P.wLoss-0.02)})),L(Object.assign({},fixed,{wLoss:P.wLoss+0.02}))],
+  ['Payback target ±1 yr',L(Object.assign({},fixed,{payback:P.payback+1})),L(Object.assign({},fixed,{payback:Math.max(3,P.payback-1)}))],
+  ['RE share −10 / +5 points (re-sized)',L(resize(Object.assign({},fixed,{target:Math.max(0.2,P.target-0.10)}))),L(resize(Object.assign({},fixed,{target:Math.min(0.98,P.target+0.05)})))],
+ ].sort((a,b)=>Math.abs(b[2]-b[1])-Math.abs(a[2]-a[1]));
+ const W=760,rh=30,H=cases.length*rh+56,span=Math.max(...cases.map(c=>Math.max(Math.abs(c[1]-base),Math.abs(c[2]-base))))*1.15||1,cx=470,sc=v=>cx+(v-base)/span*260;
+ let g='<line x1="'+cx+'" x2="'+cx+'" y1="14" y2="'+(H-28)+'" stroke="var(--ink)"/><text x="'+cx+'" y="'+(H-10)+'" font-size="12" text-anchor="middle" fill="var(--ink)">Base '+rs(base)+'</text>';
+ g+='<line x1="'+sc(P.grid)+'" x2="'+sc(P.grid)+'" y1="14" y2="'+(H-28)+'" stroke="var(--bad)" stroke-dasharray="4 3"/>';
+ if(Math.abs(P.grid-base)<span)g+='<text x="'+sc(P.grid)+'" y="10" font-size="12" text-anchor="middle" fill="var(--bad)">Grid '+rs(P.grid)+'</text>';
+ cases.forEach((c,i)=>{const y=18+i*rh;g+='<text x="10" y="'+(y+15)+'" font-size="12.5" fill="var(--ink)">'+c[0]+'</text>';
+  [[c[1],'var(--good)'],[c[2],'var(--bad)']].forEach(([v,col])=>{const a=Math.min(sc(v),cx),w=Math.abs(sc(v)-cx);g+='<rect x="'+a+'" y="'+(y+2)+'" width="'+Math.max(1,w)+'" height="18" fill="'+col+'" opacity=".75"/>';
+   g+='<text x="'+(v<base?a-4:a+w+4)+'" y="'+(y+15)+'" font-size="11.5" text-anchor="'+(v<base?'end':'start')+'" fill="var(--ink2)">'+rs(v)+'</text>'})});
+ document.getElementById('tornado').innerHTML=svgEl(W,H,g);
 }
-
-// ---------------------------------------------------------------------
-// CALCULATION ENGINE
-// ---------------------------------------------------------------------
-function calcSupport({ totalAssigned, singleTouch, reopened, kbEntries, payloads }) {
-  totalAssigned = Number(totalAssigned) || 0;
-  singleTouch = Number(singleTouch) || 0;
-  reopened = Number(reopened) || 0;
-  kbEntries = Number(kbEntries) || 0;
-  payloads = Number(payloads) || 0;
-  const fcrPct = totalAssigned > 0 ? ((singleTouch - reopened) / totalAssigned) * 100 : 0;
-  let fcrPoints = 0;
-  if (fcrPct >= 75) fcrPoints = 125;
-  else if (fcrPct >= 65) fcrPoints = 75;
-  const kbPoints = kbEntries * 30;
-  const payloadPoints = payloads * 15;
-  return { fcrPct, fcrPoints, kbPoints, payloadPoints, total: fcrPoints + kbPoints + payloadPoints };
-}
-
-function calcEngineering({ monitors, vendorBuilds, zeroOutages }) {
-  monitors = Number(monitors) || 0;
-  vendorBuilds = Number(vendorBuilds) || 0;
-  const monitorPoints = monitors * 75;
-  const buildPoints = vendorBuilds * 15;
-  const outagePoints = zeroOutages ? 50 : 0;
-  return { monitorPoints, buildPoints, outagePoints, total: monitorPoints + buildPoints + outagePoints };
-}
-
-function calcProduct({ kits, audits, completeSpecs }) {
-  kits = Number(kits) || 0;
-  audits = Number(audits) || 0;
-  const kitPoints = kits * 50;
-  const auditPoints = audits * 30;
-  const specPoints = completeSpecs ? 40 : 0;
-  return { kitPoints, auditPoints, specPoints, total: kitPoints + auditPoints + specPoints };
-}
-
-function calcPM({ milestones, slaBreaches, zeroOverdue }) {
-  milestones = Number(milestones) || 0;
-  slaBreaches = Number(slaBreaches) || 0;
-  const milestonePoints = milestones * 100;
-  const slaPoints = slaBreaches * 20;
-  const overduePoints = zeroOverdue ? 50 : 0;
-  return { milestonePoints, slaPoints, overduePoints, total: milestonePoints + slaPoints + overduePoints };
-}
-
-function calcDev({ integrations, opsTools, specSignoffs, zeroOverdueDeliverables }) {
-  integrations = Number(integrations) || 0;
-  opsTools = Number(opsTools) || 0;
-  specSignoffs = Number(specSignoffs) || 0;
-  const integrationPoints = integrations * 75;
-  const opsToolPoints = opsTools * 50;
-  const specSignoffPoints = specSignoffs * 30;
-  const zeroOverduePoints = zeroOverdueDeliverables ? 50 : 0;
-  return {
-    integrationPoints, opsToolPoints, specSignoffPoints, zeroOverduePoints,
-    total: integrationPoints + opsToolPoints + specSignoffPoints + zeroOverduePoints
-  };
-}
-
-function calcForRole(role, vals) {
-  if (role === 'SUP') return calcSupport(vals);
-  if (role === 'ENG') return calcEngineering(vals);
-  if (role === 'PRD') return calcProduct(vals);
-  if (role === 'PM') return calcPM(vals);
-  if (role === 'DEV') return calcDev(vals);
-}
-
-// ---------------------------------------------------------------------
-// HELPERS
-// ---------------------------------------------------------------------
-function escAttr(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-}
-function formatTime(iso) {
-  if (!iso) return 'never';
-  return new Date(iso).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-}
-function dateStamp() { return new Date().toISOString().slice(0, 10); }
-function safeIcons() {
-  // Icons are cosmetic; if the Lucide CDN is slow/blocked, never let that break data rendering.
-  try {
-    if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
-      lucide.createIcons();
-    }
-  } catch (e) { console.warn('Icon render skipped:', e); }
-}
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-function showToast(msg, type) {
-  type = type || 'success';
-  const container = document.getElementById('toast-container');
-  const el = document.createElement('div');
-  el.className = 'toast-enter px-4 py-3 rounded-xl border text-sm shadow-lg bg-surface/95 backdrop-blur ' +
-    (type === 'error' ? 'border-coral/30 text-coral' : 'border-mint/30 text-mint');
-  el.textContent = msg;
-  container.appendChild(el);
-  setTimeout(() => {
-    el.style.transition = 'opacity .3s, transform .3s';
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(-6px)';
-    setTimeout(() => el.remove(), 300);
-  }, 3200);
-}
-
-// ---------------------------------------------------------------------
-// DERIVED DATA
-// ---------------------------------------------------------------------
-function approvedLogs() { return state.logs.filter(l => l.status === 'Approved'); }
-
-function computeStandings() {
-  const rows = TEAM.map(m => {
-    const weekly = {};
-    WEEKS.forEach(w => weekly[w] = 0);
-    approvedLogs().filter(l => l.memberId === m.id).forEach(l => {
-      weekly[l.week] = (weekly[l.week] || 0) + l.points;
-    });
-    const total = WEEKS.reduce((s, w) => s + weekly[w], 0);
-    return Object.assign({}, m, { weekly, total });
-  });
-  rows.sort((a, b) => b.total - a.total);
-  return rows;
-}
-
-function computeSummary() {
-  const standings = computeStandings();
-  const teamTotal = standings.reduce((s, r) => s + r.total, 0);
-  const mvp = standings.length && standings[0].total > 0 ? standings[0] : null;
-
-  const supportIds = TEAM.filter(m => m.role === 'SUP').map(m => m.id);
-  const supportLogs = approvedLogs().filter(l => l.type === 'metric' && supportIds.indexOf(l.memberId) !== -1);
-  let sumTouch = 0, sumTotal = 0;
-  supportLogs.forEach(l => {
-    if (l.meta && typeof l.meta.totalAssigned === 'number') {
-      sumTouch += (l.meta.singleTouch - l.meta.reopened);
-      sumTotal += l.meta.totalAssigned;
-    }
-  });
-  const overallFcr = sumTotal > 0 ? (sumTouch / sumTotal) * 100 : 0;
-
-  // Any approved metric entry that carries a "monitors" count — regardless of who submitted it,
-  // so Shrey's and Vishal's deployments (when he's supporting Ved) count toward this too.
-  const monitorLogs = approvedLogs().filter(l => l.type === 'metric' && l.meta && typeof l.meta.monitors === 'number');
-  const activeMonitors = monitorLogs.reduce((s, l) => s + l.meta.monitors, 0);
-
-  return { teamTotal, mvp, overallFcr, activeMonitors, standings };
-}
-
-// ---------------------------------------------------------------------
-// RENDER: HEADER
-// ---------------------------------------------------------------------
-function renderHeader() {
-  const { teamTotal } = computeSummary();
-  const pct = Math.min(100, (teamTotal / TEAM_GOAL) * 100);
-  const fill = document.getElementById('hdr-fill');
-  if (fill) fill.style.width = pct + '%';
-  const scoreEl = document.getElementById('hdr-score');
-  if (scoreEl) scoreEl.textContent = teamTotal.toLocaleString('en-IN');
-  const badge = document.getElementById('hdr-badge');
-  if (badge) {
-    if (teamTotal >= TEAM_GOAL) {
-      badge.textContent = '🏆 GRAND PRIZE UNLOCKED!'; badge.className = 'text-[11px] font-semibold text-goldBright';
-    } else if (pct >= 40) {
-      badge.textContent = 'On Track 🟢'; badge.className = 'text-[11px] font-semibold text-mint';
-    } else {
-      badge.textContent = 'Early Days 🔵'; badge.className = 'text-[11px] font-semibold text-[#5FA8D3]';
-    }
-  }
-  updateSyncBadge();
-}
-
-function updateSyncBadge(mode) {
-  const badge = document.getElementById('sync-badge');
-  if (!badge) return;
-  if (mode === 'error') {
-    badge.innerHTML = '🔴 Sync Error';
-    badge.className = 'px-3 py-1.5 rounded-full text-xs font-medium bg-coral/10 text-coral border border-coral/20 hover:bg-coral/20 transition-colors';
-  } else if (state.settings.cloudConnected) {
-    badge.innerHTML = '🟢 Cloud Synced';
-    badge.className = 'px-3 py-1.5 rounded-full text-xs font-medium bg-mint/10 text-mint border border-mint/20 hover:bg-mint/20 transition-colors';
-  } else {
-    badge.innerHTML = '🟡 Local Storage';
-    badge.className = 'px-3 py-1.5 rounded-full text-xs font-medium bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-colors';
-  }
-}
-
-// ---------------------------------------------------------------------
-// RENDER: LEADERBOARD
-// ---------------------------------------------------------------------
-function summaryCard(label, value, icon, colorClass, sub) {
-  return '<div class="bg-surface rounded-2xl border border-white/5 p-4">' +
-    '<div class="flex items-center justify-between mb-2">' +
-    '<span class="text-xs uppercase tracking-wider text-slateTxt">' + label + '</span>' +
-    '<i data-lucide="' + icon + '" class="w-4 h-4 ' + colorClass + '"></i></div>' +
-    '<div class="font-display text-3xl ' + colorClass + '">' + value + '</div>' +
-    (sub ? '<div class="text-xs text-slateTxt mt-1">' + sub + '</div>' : '') + '</div>';
-}
-
-function standingRow(r, i) {
-  const rank = i + 1;
-  const medalClasses = [
-    'bg-gradient-to-br from-goldBright to-gold text-ink',
-    'bg-gradient-to-br from-slate-300 to-slate-400 text-ink',
-    'bg-gradient-to-br from-amber-700 to-amber-800 text-white'
-  ];
-  const medalClass = rank <= 3 ? medalClasses[rank - 1] : 'bg-surface2 text-slateTxt';
-  const tint = ROLE_META[r.role].tint;
-  return '<tr class="border-b border-white/5 hover:bg-white/[0.03] transition-colors">' +
-    '<td class="px-5 py-3"><div class="medallion ' + medalClass + ' font-display font-semibold">' + rank + '</div></td>' +
-    '<td class="px-3 py-3"><div class="flex items-center gap-3">' +
-    '<div class="w-8 h-8 rounded-full flex items-center justify-center font-display text-sm shrink-0" style="background:' + tint + '22; color:' + tint + '">' + r.name[0] + '</div>' +
-    '<div><div class="font-medium">' + r.name + '</div><div class="text-xs text-slateTxt">' + ROLE_META[r.role].label + '</div></div></div></td>' +
-    WEEKS.map(w => '<td class="px-3 py-3 text-center font-mono text-slateTxt">' + (r.weekly[w] || 0) + '</td>').join('') +
-    '<td class="px-5 py-3 text-right font-mono text-lg font-bold ' + (rank === 1 && r.total > 0 ? 'text-goldBright' : 'text-white') + '">' + r.total + '</td>' +
-    '<td class="px-5 py-3 text-right">' + (rank === 1 && r.total > 0 ? '<span class="inline-flex items-center gap-1 text-xs bg-gold/15 text-goldBright px-2 py-1 rounded-full whitespace-nowrap">👑 Leader</span>' : '<span class="text-xs text-slateTxt">—</span>') + '</td></tr>';
-}
-
-function renderLeaderboard() {
-  const { teamTotal, mvp, overallFcr, activeMonitors, standings } = computeSummary();
-  const el = document.getElementById('tab-leaderboard');
-  const fcrColor = overallFcr >= 75 ? 'text-mint' : (overallFcr >= 65 ? 'text-gold' : 'text-coral');
-  el.innerHTML =
-    '<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">' +
-      summaryCard('Team Total', teamTotal.toLocaleString('en-IN'), 'trophy', 'text-gold') +
-      summaryCard('Top Scorer · MVP', mvp ? mvp.name : '—', 'crown', 'text-goldBright', mvp ? ROLE_META[mvp.role].label : 'No approved points yet') +
-      summaryCard('Overall FCR %', overallFcr.toFixed(1) + '%', 'target', fcrColor) +
-      summaryCard('Active Vendor Monitors', String(activeMonitors), 'activity', 'text-[#5FA8D3]') +
-    '</div>' +
-    '<div class="bg-surface rounded-2xl border border-white/5 overflow-hidden">' +
-      '<div class="px-5 py-4 border-b border-white/5 flex items-center justify-between flex-wrap gap-2">' +
-        '<h2 class="font-display text-lg tracking-wide uppercase text-white/90">Standings</h2>' +
-        '<span class="text-xs text-slateTxt font-mono">Live from approved logs · Goal 1,400 pts / 3 weeks</span>' +
-      '</div>' +
-      '<div class="overflow-x-auto scrollbar-thin">' +
-        '<table class="w-full text-sm">' +
-          '<thead><tr class="text-left text-slateTxt text-xs uppercase tracking-wider border-b border-white/5">' +
-            '<th class="px-5 py-3">Rank</th><th class="px-3 py-3">Member</th>' +
-            WEEKS.map(w => '<th class="px-3 py-3 text-center font-mono">' + w + '</th>').join('') +
-            '<th class="px-5 py-3 text-right">Total</th><th class="px-5 py-3 text-right">Status</th>' +
-          '</tr></thead>' +
-          '<tbody>' + standings.map(standingRow).join('') + '</tbody>' +
-        '</table>' +
-      '</div>' +
-    '</div>';
-  safeIcons();
-}
-
-// ---------------------------------------------------------------------
-// RENDER: DATA ENTRY
-// ---------------------------------------------------------------------
-function numField(id, label) {
-  return '<div><label class="text-xs text-slateTxt block mb-1">' + label + '</label>' +
-    '<input type="number" min="0" id="' + id + '" data-field="' + id + '" value="0" class="w-full bg-surface2 border border-white/10 rounded-lg px-3 py-2 text-sm font-mono" /></div>';
-}
-function checkField(id, label) {
-  return '<label class="flex items-center gap-2 mt-1 cursor-pointer col-span-2">' +
-    '<input type="checkbox" id="' + id + '" data-field="' + id + '" class="w-4 h-4 accent-gold" />' +
-    '<span class="text-sm">' + label + '</span></label>';
-}
-
-function roleFieldsHTML(role) {
-  if (role === 'SUP') return '<div class="grid grid-cols-2 gap-3 mt-3">' +
-    numField('f_totalAssigned', 'Total Assigned Tickets') +
-    numField('f_singleTouch', 'Single-Touch Resolved') +
-    numField('f_reassigned', 'Reassigned to Eng/PM') +
-    numField('f_reopened', 'Reopened Tickets (&lt;48h)') +
-    numField('f_kbEntries', 'KB / Error Code Entries') +
-    numField('f_payloads', 'Flawless Diagnostic Payloads') +
-    '</div>';
-  if (role === 'ENG') return '<div class="grid grid-cols-2 gap-3 mt-3">' +
-    numField('f_monitors', 'Synthetic Health Monitors Deployed') +
-    numField('f_vendorBuilds', 'Vendor Builds Validated &lt;4h') +
-    checkField('f_zeroOutages', 'Zero Unreported Outages') +
-    '</div>';
-  if (role === 'PRD') return '<div class="grid grid-cols-2 gap-3 mt-3">' +
-    numField('f_kits', 'Onboarding Kits / PRDs Handed Over') +
-    numField('f_audits', 'Vendor Capability Audits') +
-    checkField('f_completeSpecs', 'Complete Specs with Acceptance Criteria') +
-    '</div>';
-  if (role === 'PM') return '<div class="grid grid-cols-2 gap-3 mt-3">' +
-    numField('f_milestones', 'Top 10 Account Milestones Achieved') +
-    numField('f_slaBreaches', 'Vendor SLA Breaches Resolved &lt;2h') +
-    checkField('f_zeroOverdue', 'Zero Overdue Sprint Tasks') +
-    '</div>';
-  if (role === 'DEV') return '<div class="grid grid-cols-2 gap-3 mt-3">' +
-    numField('f_integrations', 'Custom App / Service Integration Shipped') +
-    numField('f_opsTools', 'Ops Automation &amp; Diagnostic App Built') +
-    numField('f_specSignoffs', 'Custom Requirements Spec Sign-Off') +
-    checkField('f_zeroOverdueDeliverables', 'Zero Overdue Custom Dev Deliverables') +
-    '</div>';
-  return '';
-}
-
-function gatherRoleValues(role) {
-  const v = id => document.getElementById(id);
-  if (role === 'SUP') return {
-    totalAssigned: v('f_totalAssigned') ? v('f_totalAssigned').value : 0,
-    singleTouch: v('f_singleTouch') ? v('f_singleTouch').value : 0,
-    reassigned: v('f_reassigned') ? v('f_reassigned').value : 0,
-    reopened: v('f_reopened') ? v('f_reopened').value : 0,
-    kbEntries: v('f_kbEntries') ? v('f_kbEntries').value : 0,
-    payloads: v('f_payloads') ? v('f_payloads').value : 0,
-  };
-  if (role === 'ENG') return {
-    monitors: v('f_monitors') ? v('f_monitors').value : 0,
-    vendorBuilds: v('f_vendorBuilds') ? v('f_vendorBuilds').value : 0,
-    zeroOutages: v('f_zeroOutages') ? v('f_zeroOutages').checked : false,
-  };
-  if (role === 'PRD') return {
-    kits: v('f_kits') ? v('f_kits').value : 0,
-    audits: v('f_audits') ? v('f_audits').value : 0,
-    completeSpecs: v('f_completeSpecs') ? v('f_completeSpecs').checked : false,
-  };
-  if (role === 'PM') return {
-    milestones: v('f_milestones') ? v('f_milestones').value : 0,
-    slaBreaches: v('f_slaBreaches') ? v('f_slaBreaches').value : 0,
-    zeroOverdue: v('f_zeroOverdue') ? v('f_zeroOverdue').checked : false,
-  };
-  if (role === 'DEV') return {
-    integrations: v('f_integrations') ? v('f_integrations').value : 0,
-    opsTools: v('f_opsTools') ? v('f_opsTools').value : 0,
-    specSignoffs: v('f_specSignoffs') ? v('f_specSignoffs').value : 0,
-    zeroOverdueDeliverables: v('f_zeroOverdueDeliverables') ? v('f_zeroOverdueDeliverables').checked : false,
-  };
-}
-
-function previewLine(label, val) {
-  return '<div class="flex items-center justify-between text-sm gap-3"><span class="text-slateTxt">' + label + '</span><span class="font-mono whitespace-nowrap">' + val + '</span></div>';
-}
-
-function previewRows(role, calc) {
-  if (role === 'SUP') return previewLine('FCR %', calc.fcrPct.toFixed(1) + '%') +
-    previewLine('FCR Points (&ge;75%&rarr;125 · &ge;65%&rarr;75 · else 0)', '+' + calc.fcrPoints) +
-    previewLine('KB Entry Points (&times;30)', '+' + calc.kbPoints) +
-    previewLine('Payload Points (&times;15)', '+' + calc.payloadPoints);
-  if (role === 'ENG') return previewLine('Monitor Points (&times;75)', '+' + calc.monitorPoints) +
-    previewLine('Vendor Build Points (&times;15)', '+' + calc.buildPoints) +
-    previewLine('Zero Outage Bonus', '+' + calc.outagePoints);
-  if (role === 'PRD') return previewLine('Onboarding Kit Points (&times;50)', '+' + calc.kitPoints) +
-    previewLine('Vendor Audit Points (&times;30)', '+' + calc.auditPoints) +
-    previewLine('Complete Spec Bonus', '+' + calc.specPoints);
-  if (role === 'PM') return previewLine('Milestone Points (&times;100)', '+' + calc.milestonePoints) +
-    previewLine('SLA Breach Points (&times;20)', '+' + calc.slaPoints) +
-    previewLine('Zero Overdue Bonus', '+' + calc.overduePoints);
-  if (role === 'DEV') return previewLine('Integration Shipped Points (&times;75)', '+' + calc.integrationPoints) +
-    previewLine('Ops/Diagnostic Tool Points (&times;50)', '+' + calc.opsToolPoints) +
-    previewLine('Spec Sign-Off Points (&times;30)', '+' + calc.specSignoffPoints) +
-    previewLine('Zero Overdue Deliverables Bonus', '+' + calc.zeroOverduePoints);
-  return '';
-}
-
-function previewHTML(role, calc) {
-  calc = calc || calcForRole(role, gatherRoleValues(role));
-  return '<div class="space-y-2 mb-5">' + previewRows(role, calc) + '</div>' +
-    '<div class="flex items-center justify-between pt-4 border-t border-white/10">' +
-    '<span class="font-display uppercase tracking-wide text-sm text-slateTxt">Total Points</span>' +
-    '<span class="font-display text-4xl text-goldBright">' + calc.total + '</span></div>';
-}
-
-function autoDescription(role, vals) {
-  if (role === 'SUP') return (Number(vals.totalAssigned) || 0) + ' assigned · ' + (Number(vals.singleTouch) || 0) + ' single-touch resolved · ' + (Number(vals.reopened) || 0) + ' reopened <48h · ' + (Number(vals.kbEntries) || 0) + ' KB entries · ' + (Number(vals.payloads) || 0) + ' flawless payloads';
-  if (role === 'ENG') return (Number(vals.monitors) || 0) + ' monitor(s) deployed · ' + (Number(vals.vendorBuilds) || 0) + ' vendor build(s) validated <4h' + (vals.zeroOutages ? ' · zero unreported outages' : '');
-  if (role === 'PRD') return (Number(vals.kits) || 0) + ' onboarding kit(s)/PRD(s) handed over · ' + (Number(vals.audits) || 0) + ' vendor capability audit(s)' + (vals.completeSpecs ? ' · complete specs with acceptance criteria' : '');
-  if (role === 'PM') return (Number(vals.milestones) || 0) + ' Top-10 milestone(s) achieved · ' + (Number(vals.slaBreaches) || 0) + ' vendor SLA breach(es) resolved <2h' + (vals.zeroOverdue ? ' · zero overdue sprint tasks' : '');
-  if (role === 'DEV') return (Number(vals.integrations) || 0) + ' custom app/service integration(s) shipped · ' + (Number(vals.opsTools) || 0) + ' ops automation/diagnostic app(s) built · ' + (Number(vals.specSignoffs) || 0) + ' requirements spec sign-off(s)' + (vals.zeroOverdueDeliverables ? ' · zero overdue custom dev deliverables' : '');
-  return '';
-}
-
-function renderDataEntry() {
-  const el = document.getElementById('tab-dataentry');
-  const member = getMember(deState.memberId);
-  const activeRole = deState.role || member.role;
-  const roleOptions = [member.role].concat(member.secondaryRoles || []);
-  const metricTypeHTML = roleOptions.length > 1
-    ? '<label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Metric Type <span class="normal-case text-slateTxt/60">— ' + member.name + ' supports more than one area</span></label>' +
-      '<select id="de-roletype" data-role="roletype" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-4">' +
-        roleOptions.map(r => '<option value="' + r + '"' + (r === activeRole ? ' selected' : '') + '>' + ROLE_META[r].label + (r === member.role ? ' (primary)' : ' (supporting)') + '</option>').join('') +
-      '</select>'
-    : '';
-  el.innerHTML =
-    '<div class="grid md:grid-cols-5 gap-6">' +
-      '<div class="md:col-span-2 bg-surface rounded-2xl border border-white/5 p-5">' +
-        '<h2 class="font-display text-lg uppercase tracking-wide mb-4">Raw Data Entry</h2>' +
-        '<label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Team Member</label>' +
-        '<select id="de-member" data-role="member" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-4">' +
-          TEAM.map(m => '<option value="' + m.id + '"' + (m.id === deState.memberId ? ' selected' : '') + '>' + m.name + ' — ' + ROLE_META[m.role].label + '</option>').join('') +
-        '</select>' +
-        metricTypeHTML +
-        '<label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Sprint Week</label>' +
-        '<select id="de-week" data-role="week" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-4">' +
-          WEEKS.map(w => '<option value="' + w + '"' + (w === deState.week ? ' selected' : '') + '>' + w + '</option>').join('') +
-        '</select>' +
-        '<div id="de-fields">' + roleFieldsHTML(activeRole) + '</div>' +
-        '<label class="text-xs uppercase tracking-wider text-slateTxt block mb-1 mt-4">Metric Description</label>' +
-        '<textarea id="de-desc" rows="2" placeholder="Leave blank to auto-generate from the values above" class="w-full bg-surface2 border border-white/10 rounded-xl px-3 py-2.5 text-sm mb-4"></textarea>' +
-        '<label class="text-xs uppercase tracking-wider text-slateTxt block mb-1">Proof Links <span class="normal-case text-slateTxt/60">— one per task completed</span></label>' +
-        '<div id="de-proofs">' + proofRowHTML() + '</div>' +
-        '<button type="button" data-action="add-proof-row" class="text-xs text-gold hover:text-goldBright flex items-center gap-1 mb-5"><span class="text-base leading-none">+</span> Add another proof link</button>' +
-        '<button data-action="submit-entry" class="w-full bg-gold text-ink font-semibold rounded-xl py-3 hover:bg-goldBright transition-colors flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i>Submit to Master Audit Log</button>' +
-      '</div>' +
-      '<div class="md:col-span-3 bg-surface rounded-2xl border border-white/5 p-5">' +
-        '<h2 class="font-display text-lg uppercase tracking-wide mb-4">Real-Time Point Preview</h2>' +
-        '<div id="de-preview">' + previewHTML(activeRole) + '</div>' +
-        '<p class="text-xs text-slateTxt mt-5 pt-4 border-t border-white/5">Submitting sends this entry to the Audit Log as <span class="text-gold">Pending Review</span>. It only counts toward the leaderboard once a teammate verifies it. Every task claimed needs its own proof link — this is what makes verification and tracking possible.</p>' +
-      '</div>' +
-    '</div>';
-  safeIcons();
-}
-
-function proofRowHTML() {
-  return '<div class="flex gap-2 mb-2" data-proof-row>' +
-    '<input type="text" placeholder="Task (e.g., Ticket #1042, KB entry)" data-proof-task class="flex-1 min-w-0 bg-surface2 border border-white/10 rounded-lg px-3 py-2 text-sm" />' +
-    '<input type="text" placeholder="MS-Tasks / Postman / Helpdesk ID" data-proof-link class="flex-1 min-w-0 bg-surface2 border border-white/10 rounded-lg px-3 py-2 text-sm font-mono" />' +
-    '<button type="button" data-action="remove-proof" class="w-9 h-9 shrink-0 rounded-lg bg-surface2 hover:bg-coral/20 hover:text-coral flex items-center justify-center transition-colors" title="Remove this proof link">&times;</button>' +
-  '</div>';
-}
-
-function gatherProofs() {
-  const rows = document.querySelectorAll('#de-proofs [data-proof-row]');
-  const proofs = [];
-  rows.forEach(row => {
-    const task = row.querySelector('[data-proof-task]').value.trim();
-    const link = row.querySelector('[data-proof-link]').value.trim();
-    if (link) proofs.push({ task: task || 'Task', link });
-  });
-  return proofs;
-}
-
-function refreshPreview() {
-  const member = getMember(deState.memberId);
-  const activeRole = deState.role || member.role;
-  const previewEl = document.getElementById('de-preview');
-  if (previewEl) previewEl.innerHTML = previewHTML(activeRole);
-}
-
-function submitDataEntry() {
-  const member = getMember(deState.memberId);
-  const activeRole = deState.role || member.role;
-  const vals = gatherRoleValues(activeRole);
-  const calc = calcForRole(activeRole, vals);
-  const descInput = document.getElementById('de-desc').value.trim();
-  const proofs = gatherProofs();
-  if (!proofs.length) { showToast('Add at least one proof link before submitting', 'error'); return; }
-  const isSupporting = activeRole !== member.role;
-  const desc = descInput || ((isSupporting ? '(Supporting ' + ROLE_META[activeRole].label + ') ' : '') + autoDescription(activeRole, vals));
-  const meta = Object.assign({}, vals);
-  if (activeRole === 'SUP') meta.fcrPct = calc.fcrPct;
-  if (isSupporting) meta.roleUsed = activeRole;
-  const log = logEntry({
-    num: state.nextLogNum++, memberId: member.id, type: 'metric', week: deState.week,
-    desc, points: calc.total, proofs, status: 'Pending Review', verifiedBy: null, meta, hoursAgo: 0
-  });
-  state.logs.unshift(log);
-  saveLocal();
-  refreshAll();
-  maybeAutoSync();
-  showToast(log.id + ' submitted for ' + member.name + ' — pending verification', 'success');
-  renderDataEntry();
-}
-
-// ---------------------------------------------------------------------
-// RENDER: AUDIT LOG
-// ---------------------------------------------------------------------
-function filteredLogs() {
-  return state.logs.filter(l => {
-    const member = getMember(l.memberId);
-    if (auditFilters.status !== 'All' && l.status !== auditFilters.status) return false;
-    if (auditFilters.week !== 'All' && l.week !== auditFilters.week) return false;
-    if (auditFilters.member !== 'All' && (!member || member.name !== auditFilters.member)) return false;
-    if (auditFilters.search) {
-      const q = auditFilters.search.toLowerCase();
-      const proofText = (l.proofs || []).map(p => p.task + ' ' + p.link).join(' ');
-      const hay = (l.id + ' ' + (member ? member.name : '') + ' ' + l.desc + ' ' + proofText).toLowerCase();
-      if (hay.indexOf(q) === -1) return false;
-    }
-    return true;
-  }).sort((a, b) => new Date(b.ts) - new Date(a.ts));
-}
-
-function proofsCellHTML(proofs) {
-  if (!proofs || !proofs.length) return '<span class="text-xs text-slateTxt/50">no proof</span>';
-  return proofs.map(p =>
-    '<div class="font-mono text-[11px] text-slateTxt truncate max-w-[150px]" title="' + escAttr(p.task) + ': ' + escAttr(p.link) + '">' + escAttr(p.link) + '</div>'
-  ).join('');
-}
-
-function auditRow(l) {
-  const member = getMember(l.memberId);
-  const statusClass = l.status === 'Approved' ? 'bg-mint/10 text-mint border-mint/20'
-    : l.status === 'Rejected' ? 'bg-coral/10 text-coral border-coral/20'
-    : 'bg-gold/10 text-gold border-gold/20';
-  const actions = l.status === 'Pending Review'
-    ? '<div class="flex justify-end gap-1.5">' +
-      '<button data-action="approve" data-log="' + l.id + '" class="p-1.5 rounded-lg bg-mint/10 text-mint hover:bg-mint/20 transition-colors" title="Approve"><i data-lucide="check" class="w-4 h-4"></i></button>' +
-      '<button data-action="reject" data-log="' + l.id + '" class="p-1.5 rounded-lg bg-coral/10 text-coral hover:bg-coral/20 transition-colors" title="Reject"><i data-lucide="x" class="w-4 h-4"></i></button></div>'
-    : '<span class="text-xs text-slateTxt block text-right">—</span>';
-  return '<tr class="border-b border-white/5 hover:bg-white/[0.02]">' +
-    '<td class="px-4 py-3 font-mono text-xs text-slateTxt whitespace-nowrap align-top">' + l.id + '</td>' +
-    '<td class="px-3 py-3 font-medium whitespace-nowrap align-top">' + (member ? member.name : l.memberId) + '</td>' +
-    '<td class="px-3 py-3 text-slateTxt max-w-xs truncate align-top" title="' + escAttr(l.desc) + '">' + (l.type === 'penalty' ? '⚠️ ' : '') + escAttr(l.desc) + '</td>' +
-    '<td class="px-3 py-3 text-right font-mono align-top ' + (l.points < 0 ? 'text-coral' : 'text-white') + '">' + (l.points > 0 ? '+' : '') + l.points + '</td>' +
-    '<td class="px-3 py-3 font-mono text-xs align-top">' + l.week + '</td>' +
-    '<td class="px-3 py-3 align-top">' + proofsCellHTML(l.proofs) + '</td>' +
-    '<td class="px-3 py-3 align-top"><span class="text-xs px-2 py-1 rounded-full border whitespace-nowrap ' + statusClass + '">' + l.status + '</span></td>' +
-    '<td class="px-3 py-3 text-xs text-slateTxt whitespace-nowrap align-top">' + (l.verifiedBy || '—') + '</td>' +
-    '<td class="px-4 py-3 align-top">' + actions + '</td></tr>';
-}
-function emptyRow() { return '<tr><td colspan="9" class="px-4 py-10 text-center text-slateTxt text-sm">No log entries match these filters.</td></tr>'; }
-
-function renderAuditLog() {
-  const el = document.getElementById('tab-auditlog');
-  el.innerHTML =
-    '<div class="flex flex-col md:flex-row gap-3 mb-5">' +
-      '<div class="relative flex-1">' +
-        '<i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slateTxt"></i>' +
-        '<input id="al-search" data-role="search" placeholder="Search description, proof link, or member…" value="' + escAttr(auditFilters.search) + '" class="w-full bg-surface border border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/50" />' +
-      '</div>' +
-      '<select id="al-status" data-role="status" class="bg-surface border border-white/10 rounded-xl px-3 py-2.5 text-sm">' +
-        ['All', 'Pending Review', 'Approved', 'Rejected'].map(s => '<option value="' + s + '"' + (auditFilters.status === s ? ' selected' : '') + '>' + s + '</option>').join('') +
-      '</select>' +
-      '<select id="al-week" data-role="week" class="bg-surface border border-white/10 rounded-xl px-3 py-2.5 text-sm">' +
-        ['All'].concat(WEEKS).map(s => '<option value="' + s + '"' + (auditFilters.week === s ? ' selected' : '') + '>' + s + '</option>').join('') +
-      '</select>' +
-      '<select id="al-member" data-role="member" class="bg-surface border border-white/10 rounded-xl px-3 py-2.5 text-sm">' +
-        ['All'].concat(TEAM.map(m => m.name)).map(s => '<option value="' + s + '"' + (auditFilters.member === s ? ' selected' : '') + '>' + s + '</option>').join('') +
-      '</select>' +
-      '<button data-action="open-penalty" class="whitespace-nowrap bg-coral/10 text-coral border border-coral/20 hover:bg-coral/20 transition-colors rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>Log Penalty</button>' +
-      '<button data-action="export-csv" class="whitespace-nowrap bg-surface2 hover:bg-white/10 transition-colors rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i>Export CSV</button>' +
-    '</div>' +
-    '<div class="bg-surface rounded-2xl border border-white/5 overflow-hidden">' +
-      '<div class="overflow-x-auto scrollbar-thin">' +
-        '<table class="w-full text-sm">' +
-          '<thead><tr class="text-left text-slateTxt text-xs uppercase tracking-wider border-b border-white/5">' +
-            '<th class="px-4 py-3">Log ID</th><th class="px-3 py-3">Member</th><th class="px-3 py-3">Description</th><th class="px-3 py-3 text-right">Points</th><th class="px-3 py-3">Week</th><th class="px-3 py-3">Proof Links</th><th class="px-3 py-3">Status</th><th class="px-3 py-3">Verified By</th><th class="px-4 py-3 text-right">Actions</th>' +
-          '</tr></thead>' +
-          '<tbody id="al-tbody">' + (filteredLogs().map(auditRow).join('') || emptyRow()) + '</tbody>' +
-        '</table>' +
-      '</div>' +
-    '</div>';
-  safeIcons();
-}
-
-function renderAuditLogTableOnly() {
-  const tbody = document.getElementById('al-tbody');
-  if (!tbody) return;
-  tbody.innerHTML = filteredLogs().map(auditRow).join('') || emptyRow();
-  safeIcons();
-}
-
-function requestVerify(logId, action) {
-  pendingVerify = { logId, action };
-  document.getElementById('verify-action-label').textContent = action === 'approve' ? 'Approval' : 'Rejection';
-  document.getElementById('verify-log-id').textContent = logId;
-  document.getElementById('verify-select').value = '';
-  document.getElementById('modal-verify').classList.remove('hidden');
-}
-
-function confirmVerify() {
-  const verifier = document.getElementById('verify-select').value;
-  if (!verifier) { showToast('Select a verifier first', 'error'); return; }
-  const log = state.logs.find(l => l.id === pendingVerify.logId);
-  if (!log) { closeModal('modal-verify'); return; }
-  log.status = pendingVerify.action === 'approve' ? 'Approved' : 'Rejected';
-  log.verifiedBy = verifier;
-  closeModal('modal-verify');
-  saveLocal();
-  refreshAll();
-  maybeAutoSync();
-  showToast(log.id + ' marked ' + log.status, log.status === 'Approved' ? 'success' : 'error');
-}
-
-function csvCell(v) {
-  const s = String(v == null ? '' : v);
-  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-}
-function exportLogsCSV() {
-  const headers = ['Log ID', 'Team Member', 'Type', 'Metric Description', 'Points', 'Sprint Week', 'Proof Links', 'Status', 'Verified By', 'Timestamp'];
-  const rows = state.logs.map(l => {
-    const member = getMember(l.memberId);
-    const proofText = (l.proofs || []).map(p => p.task + ': ' + p.link).join(' | ');
-    return [l.id, member ? member.name : l.memberId, l.type, l.desc, l.points, l.week, proofText, l.status, l.verifiedBy || '', l.ts];
-  });
-  const csv = [headers].concat(rows).map(r => r.map(csvCell).join(',')).join('\n');
-  downloadBlob(new Blob([csv], { type: 'text/csv' }), 'august-cup-audit-log-' + dateStamp() + '.csv');
-  showToast('Logs exported to CSV', 'success');
-}
-
-// ---------------------------------------------------------------------
-// PENALTY MODAL
-// ---------------------------------------------------------------------
-function openPenaltyModal() {
-  document.getElementById('penalty-form').reset();
-  document.getElementById('pen-custom-fields').classList.add('hidden');
-  document.getElementById('modal-penalty').classList.remove('hidden');
-}
-function submitPenalty(e) {
-  e.preventDefault();
-  const memberId = document.getElementById('pen-member').value;
-  if (!memberId) { showToast('Select a team member', 'error'); return; }
-  const preset = document.getElementById('pen-preset').value;
-  const week = document.getElementById('pen-week').value;
-  const proof = document.getElementById('pen-proof').value.trim();
-  let reason, points;
-  if (preset === 'lazy') { reason = 'Lazy Escalation — ticket pushed on without complete diagnostics'; points = -15; }
-  else {
-    reason = document.getElementById('pen-reason').value.trim() || 'Manual Penalty';
-    points = -Math.abs(Number(document.getElementById('pen-points').value) || 0);
-  }
-  const member = getMember(memberId);
-  const proofs = proof ? [{ task: reason, link: proof }] : [];
-  const log = logEntry({
-    num: state.nextLogNum++, memberId, type: 'penalty', week, desc: reason, points,
-    proofs, status: 'Pending Review', verifiedBy: null, meta: {}, hoursAgo: 0
-  });
-  state.logs.unshift(log);
-  saveLocal();
-  closeModal('modal-penalty');
-  refreshAll();
-  maybeAutoSync();
-  showToast('Penalty logged for ' + member.name + ' — pending verification', 'success');
-}
-
-// ---------------------------------------------------------------------
-// RENDER: RULES
-// ---------------------------------------------------------------------
-function ruleCard(role, title, rows, note) {
-  const tint = ROLE_META[role].tint;
-  return '<div class="bg-surface rounded-2xl border border-white/5 p-5">' +
-    '<div class="flex items-center gap-2 mb-3">' +
-    '<span class="w-8 h-8 rounded-lg flex items-center justify-center font-display text-xs shrink-0" style="background:' + tint + '22; color:' + tint + '">' + role + '</span>' +
-    '<h3 class="font-display text-base uppercase tracking-wide">' + title + '</h3></div>' +
-    '<div class="divide-y divide-white/5">' + rows.map(r =>
-      '<div class="py-2.5 first:pt-0 last:pb-0">' +
-        '<div class="flex items-start justify-between gap-3 text-sm"><span class="font-medium">' + r[0] + '</span><span class="font-mono text-right whitespace-nowrap">' + r[1] + '</span></div>' +
-        (r[2] ? '<p class="text-xs text-slateTxt mt-1 leading-relaxed">' + r[2] + '</p>' : '') +
-      '</div>'
-    ).join('') + '</div>' +
-    (note ? '<p class="text-xs text-slateTxt/70 mt-3 pt-3 border-t border-white/5">' + note + '</p>' : '') + '</div>';
-}
-
-function renderRules() {
-  const el = document.getElementById('tab-rules');
-  el.innerHTML =
-    '<div class="grid md:grid-cols-2 gap-5">' +
-      ruleCard('SUP', 'Support — Rutvi &amp; Dax', [
-        ['FCR %', '((Single-Touch &minus; Reopened) &divide; Total Assigned) &times; 100',
-          'First Contact Resolution — the share of tickets a rep solves fully on the first interaction, with no reopen inside 48h. It measures whether a fix actually stuck.'],
-        ['FCR Points', '&ge;75% &rarr; 125 pts · 65&ndash;74% &rarr; 75 pts · &lt;65% &rarr; 0 pts',
-          'The week\u2019s FCR % is converted into points using these three bands — one covered by a single helpdesk report proof for the week.'],
-        ['KB / Error Code Entry', '30 pts each',
-          'Publishing a new knowledge-base article or documented error code so future tickets on the same issue can be self-served or resolved faster. Each entry needs its own proof link.'],
-        ['Flawless Diagnostic Payload', '15 pts each',
-          'Attaching a complete, correctly formatted diagnostic payload (logs, traces, request/response) to a ticket before escalating it — nothing missing for the next person to act on. Each payload needs its own proof link.'],
-      ], 'Reassigned-to-Eng/PM tickets are logged for context but only feed the FCR formula above.') +
-      ruleCard('ENG', 'Engineering — Ved &amp; Shrey', [
-        ['Synthetic Health Monitor Deployed', '75 pts each',
-          'Setting up an automated monitor that continuously checks a service\u2019s health or uptime and alerts the team before a customer notices a problem.'],
-        ['Vendor Build Validated &lt;4h', '15 pts each',
-          'Testing and signing off a vendor\u2019s software or firmware build within 4 hours of receiving it, so releases don\u2019t stall waiting on validation.'],
-        ['Zero Unreported Outages', '+50 pts bonus',
-          'No outage happened during the week that the team didn\u2019t catch and report proactively before a customer had to flag it first.'],
-      ], 'Vishal also logs under these Engineering metrics whenever he\u2019s picking up work in direct support of Ved — the Data Entry tab lets him switch between his own metrics and this set.') +
-      ruleCard('DEV', 'Custom Software Development &amp; Ops Integration — Vishal', [
-        ['Custom App / Service Integration Shipped', '75 pts each',
-          'Deploying a custom internal tool, client middleware, or CPaaS API bridge — live and in use, not just built.'],
-        ['Ops Automation &amp; Diagnostic App Built', '50 pts each',
-          'Building a tool that automates a Support or Ops workflow, or automates error logging/diagnostics.'],
-        ['Custom Requirements Spec Sign-Off', '30 pts each',
-          'Getting the scope and integration architecture for a custom project formally signed off by the client or internal requesting team before build starts.'],
-        ['Zero Overdue Custom Dev Deliverables', '+50 pts bonus',
-          'No custom development deliverable was left open past its due date by end of week.'],
-      ]) +
-      ruleCard('PRD', 'Product — Richa', [
-        ['Onboarding Kit / PRD Handed Over', '50 pts each',
-          'Delivering a complete onboarding package or Product Requirements Document to a vendor, partner, or team — ready to act on without follow-up questions.'],
-        ['Vendor Capability Audit', '30 pts each',
-          'Formally assessing a vendor\u2019s technical or operational capability against Alendei\u2019s requirements checklist.'],
-        ['Complete Specs with Acceptance Criteria', '+40 pts bonus',
-          'Writing specs that include clear, testable acceptance criteria, so engineering knows exactly when a feature counts as done.'],
-      ]) +
-      ruleCard('PM', 'Project Mgmt &amp; Consulting — Ronak', [
-        ['Top 10 Account Milestone Achieved', '100 pts each',
-          'Hitting a defined milestone — contract signed, handover completed, payment released — on one of the company\u2019s top 10 strategic accounts.'],
-        ['Vendor SLA Breach Resolved &lt;2h', '20 pts each',
-          'Catching and resolving a vendor\u2019s SLA breach within 2 hours of it occurring, limiting the downstream impact.'],
-        ['Zero Overdue Sprint Tasks', '+50 pts bonus',
-          'No task on the sprint board was left open past its due date by end of week.'],
-      ]) +
-    '</div>' +
-    '<div class="mt-5 bg-coral/5 border border-coral/20 rounded-2xl p-5">' +
-      '<div class="flex items-center gap-2 mb-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-coral"></i><h3 class="font-display text-lg uppercase tracking-wide text-coral">Penalties</h3></div>' +
-      '<p class="text-sm text-slateTxt">Lazy Escalation — raising a ticket to Engineering or PM without a complete diagnostic payload, forcing the receiver to chase basic details before they can act — <span class="text-coral font-mono">&minus;15 pts</span>. Log it from the Audit Log tab; like every entry, it needs a second teammate\u2019s approval before it counts.</p>' +
-    '</div>' +
-    '<div class="mt-5 bg-surface border border-white/5 rounded-2xl p-5">' +
-      '<div class="flex items-center gap-2 mb-2"><i data-lucide="shield-check" class="w-5 h-5 text-gold"></i><h3 class="font-display text-lg uppercase tracking-wide">Validation &amp; Audit Rules</h3></div>' +
-      '<ul class="text-sm text-slateTxt space-y-1.5 list-disc list-inside">' +
-        '<li>Every task claimed needs its own proof link (MS-Tasks item, Postman collection, or Helpdesk report ID) — mapping proof to task is what keeps the leaderboard trustworthy and easy to audit.</li>' +
-        '<li>Points only count toward the leaderboard once a named teammate — never the submitter — approves the entry.</li>' +
-        '<li>Team goal: <span class="font-mono text-gold">1,400 pts</span> across 3 sprint weeks (W2&ndash;W4) to unlock the Grand Prize.</li>' +
-      '</ul>' +
-    '</div>';
-  safeIcons();
-}
-
-// ---------------------------------------------------------------------
-// CLOUD SYNC (JSONBin.io)
-// ---------------------------------------------------------------------
-function setSyncMessage(msg, type) {
-  const el = document.getElementById('set-message');
-  el.textContent = msg;
-  el.className = 'text-xs mb-3 min-h-[1rem] ' + (type === 'error' ? 'text-coral' : type === 'success' ? 'text-mint' : 'text-slateTxt');
-}
-
-async function connectAndSync() {
-  const id = document.getElementById('set-binid').value.trim();
-  const key = document.getElementById('set-key').value.trim();
-  if (!id || !key) { setSyncMessage('Enter both Bin ID and Master Key.', 'error'); return; }
-  setSyncMessage('Connecting…', 'info');
-  try {
-    const res = await fetch('https://api.jsonbin.io/v3/b/' + id + '/latest', { headers: { 'X-Master-Key': key } });
-    if (!res.ok) throw new Error('Bin not reachable (HTTP ' + res.status + '). Check the Bin ID and key.');
-    const data = await res.json();
-    if (data && data.record && Array.isArray(data.record.logs)) {
-      state = data.record;
-    }
-    state.settings.jsonbinId = id;
-    state.settings.jsonbinKey = key;
-    state.settings.cloudConnected = true;
-    state.settings.lastSynced = new Date().toISOString();
-    saveLocal();
-    refreshAll();
-    openSettingsModal();
-    setSyncMessage('Connected. Remote data loaded successfully.', 'success');
-    showToast('Cloud sync connected', 'success');
-  } catch (err) {
-    setSyncMessage(err.message || 'Connection failed. Check your Bin ID, Master Key, and internet connection.', 'error');
-    state.settings.cloudConnected = false;
-    updateSyncBadge();
-  }
-}
-
-async function pushToCloud(silent) {
-  if (!state.settings.cloudConnected) return;
-  try {
-    const res = await fetch('https://api.jsonbin.io/v3/b/' + state.settings.jsonbinId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': state.settings.jsonbinKey },
-      body: JSON.stringify(state)
-    });
-    if (!res.ok) throw new Error('Push failed: ' + res.status);
-    state.settings.lastSynced = new Date().toISOString();
-    updateSyncBadge();
-  } catch (err) {
-    console.error(err);
-    updateSyncBadge('error');
-    if (!silent) showToast('Cloud push failed — your data is safe in local storage', 'error');
-  }
-}
-
-function maybeAutoSync() {
-  if (state.settings.cloudConnected && state.settings.autoSync) pushToCloud(true);
-}
-
-function disconnectCloud() {
-  state.settings.cloudConnected = false;
-  saveLocal();
-  updateSyncBadge();
-  openSettingsModal();
-  showToast('Disconnected from cloud sync', 'success');
-}
-
-function openSettingsModal() {
-  document.getElementById('set-binid').value = state.settings.jsonbinId || '';
-  document.getElementById('set-key').value = state.settings.jsonbinKey || '';
-  document.getElementById('set-autosync').checked = !!state.settings.autoSync;
-  document.getElementById('set-disconnect').classList.toggle('hidden', !state.settings.cloudConnected);
-  const note = document.getElementById('set-connected-note');
-  if (state.settings.cloudConnected) {
-    note.textContent = 'Connected · last synced ' + formatTime(state.settings.lastSynced);
-    note.classList.remove('hidden');
-  } else {
-    note.classList.add('hidden');
-  }
-  setSyncMessage('', null);
-  document.getElementById('modal-settings').classList.remove('hidden');
-}
-
-function toggleKeyVisibility() {
-  const inp = document.getElementById('set-key');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-}
-
-function exportJSON() {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  downloadBlob(blob, 'august-cup-backup-' + dateStamp() + '.json');
-  showToast('Backup exported', 'success');
-}
-function importJSONFile(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const parsed = JSON.parse(e.target.result);
-      if (!parsed || !Array.isArray(parsed.logs)) throw new Error('That file does not look like a valid August Cup backup.');
-      state = parsed;
-      saveLocal();
-      refreshAll();
-      openSettingsModal();
-      showToast('Backup imported successfully', 'success');
-    } catch (err) {
-      showToast('Import failed: ' + err.message, 'error');
-    }
-  };
-  reader.readAsText(file);
-}
-
-function resetAllData() {
-  const ok = window.confirm(
-    'This clears every logged point, submission, and audit entry for the whole team' +
-    (state.settings.cloudConnected ? ' and overwrites the connected cloud bin with a clean slate' : '') +
-    '. This cannot be undone. Continue?'
-  );
-  if (!ok) return;
-  const keepSettings = state.settings; // preserve cloud connection config, just wipe the competition data
-  state = defaultState();
-  state.settings = keepSettings;
-  saveLocal();
-  refreshAll();
-  openSettingsModal();
-  if (state.settings.cloudConnected) {
-    pushToCloud(false); // explicitly overwrite whatever (possibly stale/dummy) data sits in the cloud bin
-  }
-  showToast('All data reset to a clean slate', 'success');
-}
-
-// ---------------------------------------------------------------------
-// TAB SWITCHING + GLOBAL REFRESH
-// ---------------------------------------------------------------------
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-  document.getElementById('tab-' + tab).classList.remove('hidden');
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('tab-btn-active', b.dataset.tab === tab));
-  if (tab === 'leaderboard') renderLeaderboard();
-  else if (tab === 'dataentry') renderDataEntry();
-  else if (tab === 'auditlog') renderAuditLog();
-  else if (tab === 'rules') renderRules();
-}
-
-function refreshAll() {
-  renderHeader();
-  if (currentTab === 'leaderboard') renderLeaderboard();
-  else if (currentTab === 'auditlog') renderAuditLog();
-}
-
-// ---------------------------------------------------------------------
-// EVENT WIRING
-// ---------------------------------------------------------------------
-function wireEvents() {
-  document.getElementById('tab-buttons').addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-tab]');
-    if (btn) switchTab(btn.dataset.tab);
-  });
-
-  document.getElementById('gear-btn').addEventListener('click', openSettingsModal);
-  document.getElementById('sync-badge').addEventListener('click', openSettingsModal);
-
-  const settingsModal = document.getElementById('modal-settings');
-  settingsModal.addEventListener('click', (e) => {
-    if (e.target === settingsModal) closeModal('modal-settings');
-    if (e.target.closest('[data-action="close"]')) closeModal('modal-settings');
-    if (e.target.closest('[data-action="connect"]')) connectAndSync();
-    if (e.target.closest('[data-action="disconnect"]')) disconnectCloud();
-    if (e.target.closest('[data-action="export-json"]')) exportJSON();
-    if (e.target.closest('[data-action="reset-data"]')) resetAllData();
-    if (e.target.closest('[data-action="toggle-key-visibility"]')) toggleKeyVisibility();
-  });
-  document.getElementById('set-autosync').addEventListener('change', (e) => {
-    state.settings.autoSync = e.target.checked;
-    saveLocal();
-  });
-  document.getElementById('set-import-file').addEventListener('change', (e) => {
-    const f = e.target.files[0];
-    if (f) importJSONFile(f);
-    e.target.value = '';
-  });
-
-  const verifyModal = document.getElementById('modal-verify');
-  verifyModal.addEventListener('click', (e) => {
-    if (e.target === verifyModal) closeModal('modal-verify');
-    if (e.target.closest('[data-action="close"]')) closeModal('modal-verify');
-    if (e.target.closest('[data-action="confirm-verify"]')) confirmVerify();
-  });
-
-  const penaltyModal = document.getElementById('modal-penalty');
-  penaltyModal.addEventListener('click', (e) => {
-    if (e.target === penaltyModal) closeModal('modal-penalty');
-    if (e.target.closest('[data-action="close"]')) closeModal('modal-penalty');
-  });
-  document.getElementById('pen-preset').addEventListener('change', (e) => {
-    document.getElementById('pen-custom-fields').classList.toggle('hidden', e.target.value !== 'custom');
-  });
-  document.getElementById('penalty-form').addEventListener('submit', submitPenalty);
-
-  const deTab = document.getElementById('tab-dataentry');
-  deTab.addEventListener('change', (e) => {
-    if (e.target.dataset.role === 'member') { deState.memberId = e.target.value; deState.role = null; renderDataEntry(); }
-    else if (e.target.dataset.role === 'roletype') { deState.role = e.target.value; renderDataEntry(); }
-    else if (e.target.dataset.role === 'week') { deState.week = e.target.value; }
-    else if (e.target.dataset.field) { refreshPreview(); }
-  });
-  deTab.addEventListener('input', (e) => {
-    if (e.target.dataset.field) refreshPreview();
-  });
-  deTab.addEventListener('click', (e) => {
-    if (e.target.closest('[data-action="submit-entry"]')) {
-      submitDataEntry();
-    } else if (e.target.closest('[data-action="add-proof-row"]')) {
-      document.getElementById('de-proofs').insertAdjacentHTML('beforeend', proofRowHTML());
-    } else if (e.target.closest('[data-action="remove-proof"]')) {
-      const rows = document.querySelectorAll('#de-proofs [data-proof-row]');
-      const row = e.target.closest('[data-proof-row]');
-      if (rows.length > 1) row.remove();
-      else row.querySelectorAll('input').forEach(i => { i.value = ''; });
-    }
-  });
-
-  const alTab = document.getElementById('tab-auditlog');
-  alTab.addEventListener('input', (e) => {
-    if (e.target.dataset.role === 'search') { auditFilters.search = e.target.value; renderAuditLogTableOnly(); }
-  });
-  alTab.addEventListener('change', (e) => {
-    const role = e.target.dataset.role;
-    if (role === 'status' || role === 'week' || role === 'member') {
-      auditFilters[role] = e.target.value;
-      renderAuditLogTableOnly();
-    }
-  });
-  alTab.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action]');
-    if (!btn) return;
-    const action = btn.dataset.action;
-    if (action === 'approve') requestVerify(btn.dataset.log, 'approve');
-    else if (action === 'reject') requestVerify(btn.dataset.log, 'reject');
-    else if (action === 'open-penalty') openPenaltyModal();
-    else if (action === 'export-csv') exportLogsCSV();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      ['modal-settings', 'modal-verify', 'modal-penalty'].forEach(closeModal);
-    }
-  });
-}
-
-// ---------------------------------------------------------------------
-// INIT
-// ---------------------------------------------------------------------
-function init() {
-  safeIcons();
-  wireEvents();
-  renderHeader();
-  switchTab('leaderboard');
-}
-document.addEventListener('DOMContentLoaded', function () {
-  try {
-    init();
-  } catch (err) {
-    console.error('App init failed:', err);
-    var el = document.getElementById('tab-leaderboard');
-    if (el) {
-      el.classList.remove('hidden');
-      el.innerHTML = '<div class="bg-surface border border-coral/30 rounded-2xl p-5 text-sm text-coral">' +
-        'Something went wrong while loading the dashboard. Try refreshing the page. ' +
-        '(Details in the browser console.)</div>';
-    }
-  }
-});
+function renderBills(){let h='<tr><th>Month</th><th>Consumption (kVAh)</th><th>Bill payable by due date (₹)</th><th>₹/kVAh</th></tr>';let a=0,b=0;
+ BILL_MONTHS.forEach((m,i)=>{a+=BILL_KVAH[i];b+=BILL_AMT[i];h+='<tr><td>'+m+'</td><td>'+inr(BILL_KVAH[i])+'</td><td>'+inr(BILL_AMT[i])+'</td><td>'+(BILL_AMT[i]/BILL_KVAH[i]).toFixed(2)+'</td></tr>'});
+ h+='<tr class="tot"><td>12 months</td><td>'+inr(a)+'</td><td>'+inr(b)+'</td><td>'+(b/a).toFixed(2)+'</td></tr>';document.getElementById('bills').innerHTML=h}
+document.getElementById('autosize').addEventListener('change',e=>{P.autosize=e.target.checked?1:0;schedule()});
+document.getElementById('reset').addEventListener('click',()=>{P=defaults();syncControls();run()});
+document.getElementById('copyCfg').addEventListener('click',()=>{navigator.clipboard&&navigator.clipboard.writeText(window.__cfg).then(()=>{document.getElementById('copied').textContent='Copied. Paste it into the term sheet\u2019s "Load configuration" box.'})});
+buildControls();renderBills();run();
 </script>
 </body>
 </html>
