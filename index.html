@@ -181,7 +181,7 @@ h3{font-size:15px;font-weight:600;margin:0 0 8px}
 
  <section>
   <h2>25-year cash flow at the offer tariff (₹ Cr)</h2>
-  <p class="sub">Project payback uses post-tax, unlevered cash flow against total capex including GST. DSCR = (EBITDA − tax) ÷ debt service.</p>
+  <p class="sub">Solar output factor = (1 − first-year degradation) × (1 − annual degradation)^(year − 1), so 99.0% in year 1, about 98.5% in year 2 and 98.0% in year 3. Delivered units fall faster than solar output because BESS health also fades each year, and slower in sunny months because some surplus solar was being curtailed anyway. BESS health resets to 100% in the year after augmentation. Project payback uses post-tax, unlevered cash flow against total capex including GST. DSCR = (EBITDA − tax) ÷ debt service.</p>
   <div class="tw" style="max-height:520px"><table id="cf"></table></div>
  </section>
 
@@ -262,7 +262,7 @@ function cashflows(p,T){
  let bal=debt,block=C.total,cum=-C.total,payback=null,loss=0,lossU=0;const rows=[];
  for(let y=1;y<=p.term;y++){
   const sf=(1-p.deg1)*Math.pow(1-p.deg,y-1);
-  const age=y<=p.augYear?y-1:y-p.augYear;const soh=Math.max(0.5,1-p.bessDeg*age);
+  const age=y<=p.augYear?y-1:y-p.augYear-1;const soh=Math.max(0.5,1-p.bessDeg*age);
   const E=energyYear(p,sf,soh);
   const tariff=T*Math.pow(1+p.esc,y-1),rev=E.inj*1e3*tariff/1e7;
   const ef=Math.pow(1+p.omEsc,y-1);
@@ -281,7 +281,7 @@ function cashflows(p,T){
   const dscr=y<=n?(ebitda-tx)/(interest+prin):null;
   const land=landedAt(p,T,y),grid=p.grid*Math.pow(1+p.gridEsc,y-1);
   const sav=E.deliv*1e3*(grid-land)/1e7;
-  rows.push({y,inj:E.inj,deliv:E.deliv,load:E.load,cov:E.cov,tariff,rev,opex,ebitda,dep,interest,prin,tax:tx,rep,fcf,fcfe,cum,dscr,land,grid,sav,margin:mfee,div:Math.max(0,fcfe)*p.custEq,aCF:fcfe*(1-p.custEq)+mfee});
+  rows.push({y,sf,soh,gen:E.gen,curt:E.curt,inj:E.inj,deliv:E.deliv,load:E.load,cov:E.cov,tariff,rev,opex,ebitda,dep,interest,prin,tax:tx,rep,fcf,fcfe,cum,dscr,land,grid,sav,margin:mfee,div:Math.max(0,fcfe)*p.custEq,aCF:fcfe*(1-p.custEq)+mfee});
  }
  const ds=rows.filter(x=>x.dscr!==null).map(x=>x.dscr);
  return{C,debt,eq,rows,payback,projIRR:irr([-C.total,...rows.map(x=>x.fcf)]),eqIRR:irr([-eq,...rows.map(x=>x.fcfe)]),
@@ -505,9 +505,9 @@ function render(){
  renderReco(offerT,O,r,y1);
  renderTornado(Tp);
  // cash flow table
- let c='<tr><th>Year</th><th>Delivered MU</th><th>RE share</th><th>Tariff ₹</th><th>Revenue</th><th>Opex</th><th>EBITDA</th><th>Interest</th><th>Principal</th><th>Tax</th><th>Replacement</th><th>Project FCF</th><th>Cumulative</th><th>Equity CF</th><th>DSCR</th><th>Alendei margin</th><th>Alendei CF</th><th>Landed ₹</th><th>Grid ₹</th><th>Cust. saving</th></tr>';
- c+='<tr><td>0</td><td colspan="10" style="text-align:left">Construction, total capex incl. GST</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.eq,2)+'</td><td></td><td></td><td class="neg">'+inr(-r.aEq,2)+'</td><td colspan="3"></td></tr>';
- r.rows.forEach(x=>{c+='<tr><td>'+x.y+'</td><td>'+inr(x.deliv/1e3,2)+'</td><td>'+pct(x.cov)+'</td><td>'+x.tariff.toFixed(2)+'</td><td>'+inr(x.rev,2)+'</td><td>'+inr(x.opex,2)+'</td><td>'+inr(x.ebitda,2)+'</td><td>'+inr(x.interest,2)+'</td><td>'+inr(x.prin,2)+'</td><td>'+inr(x.tax,2)+'</td><td>'+(x.rep?inr(x.rep,2):'–')+'</td><td>'+inr(x.fcf,2)+'</td><td class="'+(x.cum<0?'neg':'pos')+'">'+inr(x.cum,2)+'</td><td>'+inr(x.fcfe,2)+'</td><td>'+(x.dscr?x.dscr.toFixed(2):'–')+'</td><td>'+x.land.toFixed(2)+'</td><td>'+x.grid.toFixed(2)+'</td><td class="'+(x.sav<0?'neg':'')+'">'+inr(x.sav,2)+'</td></tr>'});
+ let c='<tr><th>Year</th><th>Solar output factor</th><th>Solar gen. MU</th><th>BESS health</th><th>Curtailed MU</th><th>Delivered MU</th><th>RE share</th><th>Tariff ₹</th><th>Revenue</th><th>Opex</th><th>EBITDA</th><th>Interest</th><th>Principal</th><th>Tax</th><th>Replacement</th><th>Project FCF</th><th>Cumulative</th><th>Equity CF</th><th>DSCR</th><th>Alendei margin</th><th>Alendei CF</th><th>Landed ₹</th><th>Grid ₹</th><th>Cust. saving</th></tr>';
+ c+='<tr><td>0</td><td colspan="4"></td><td colspan="10" style="text-align:left">Construction, total capex incl. GST</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.C.total,2)+'</td><td class="neg">'+inr(-r.eq,2)+'</td><td></td><td></td><td class="neg">'+inr(-r.aEq,2)+'</td><td colspan="3"></td></tr>';
+ r.rows.forEach(x=>{c+='<tr><td>'+x.y+'</td><td>'+pct(x.sf,2)+'</td><td>'+inr(x.gen/1e3,2)+'</td><td>'+pct(x.soh,0)+'</td><td>'+inr(x.curt/1e3,2)+'</td><td>'+inr(x.deliv/1e3,2)+'</td><td>'+pct(x.cov)+'</td><td>'+x.tariff.toFixed(2)+'</td><td>'+inr(x.rev,2)+'</td><td>'+inr(x.opex,2)+'</td><td>'+inr(x.ebitda,2)+'</td><td>'+inr(x.interest,2)+'</td><td>'+inr(x.prin,2)+'</td><td>'+inr(x.tax,2)+'</td><td>'+(x.rep?inr(x.rep,2):'–')+'</td><td>'+inr(x.fcf,2)+'</td><td class="'+(x.cum<0?'neg':'pos')+'">'+inr(x.cum,2)+'</td><td>'+inr(x.fcfe,2)+'</td><td>'+(x.dscr?x.dscr.toFixed(2):'–')+'</td><td>'+x.land.toFixed(2)+'</td><td>'+x.grid.toFixed(2)+'</td><td class="'+(x.sav<0?'neg':'')+'">'+inr(x.sav,2)+'</td></tr>'});
  document.getElementById('cf').innerHTML=c;
  // term sheet link
  const cfg=Object.assign({},P,{offerT:offerT});
